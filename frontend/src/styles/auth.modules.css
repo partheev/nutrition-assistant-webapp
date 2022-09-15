@@ -1,0 +1,14 @@
+.textField {
+  width: 100%;
+  display: block;
+  padding: 16px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background-color: #f6f6f6;
+  border: 2px solid var(--themecolor);
+  border-radius: 10px;
+}
+.label {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
