@@ -7,7 +7,6 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import About from "./About";
 const Dashboard = () => {
   const [isActive, setIsActive] = useState(true);
   const [isActive1, setIsActive1] = useState(false);
