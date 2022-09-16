@@ -5,3 +5,7 @@ frontend/build
 backend/.env
 backend/db.json
 backend/venv
+backend/DigiCertGlobalRootCA.crt
+
+ai-food-detection/.env
+ai-food-detection/object-storage-keys.json
