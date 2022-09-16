@@ -7,6 +7,7 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import About from "./About";
 const Dashboard = () => {
   const [isActive, setIsActive] = useState(true);
   const [isActive1, setIsActive1] = useState(false);
@@ -50,6 +51,7 @@ const Dashboard = () => {
   };
 
   return (
+
     <div>
       <div className="container">
         <div className="navigation">
@@ -91,7 +93,7 @@ const Dashboard = () => {
                 <span className="icon">
                   <MenuIcon fontSize="large" />
                 </span>
-                <span className="text">Lorem</span>
+                <span className="text">recommended</span>
               </Link>
             </li>
             <div className="indicator"></div>
