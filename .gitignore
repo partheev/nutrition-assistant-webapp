@@ -9,3 +9,5 @@ backend/DigiCertGlobalRootCA.crt
 
 ai-food-detection/.env
 ai-food-detection/object-storage-keys.json
+
+.vscode

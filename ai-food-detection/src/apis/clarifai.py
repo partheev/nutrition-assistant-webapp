@@ -1,34 +1,35 @@
 
 from flask import Blueprint, request, current_app
-from src.config.ibm_cos import cos
-import uuid
-import os
-from ibm_s3transfer.aspera.manager import AsperaTransferManager
-
+import requests
 clarifai = Blueprint('clarifai', __name__, url_prefix='/api/clarifai')
 
 
 @clarifai.post('/detect-food')
 def detectFood():
-    if not request.files:
-        return{
-            'msg': 'Please send image file with [name=foodImage]'
-        }, 400
+    try:
+        data = request.json
+        imageUrl = data.get('image_url')
+        if imageUrl is None:
+            return{
+                'msg': 'Invalid data. request body should contains [image_url]'
+            }, 400
 
-    image = request.files.get('foodImage')
-    filename = str(uuid.uuid4())
-    filepath = os.path.join(current_app.config.get('IMAGE_UPLOADS')+filename)
-    image.save(filepath)
-
-    print('image', filepath)
-    with AsperaTransferManager(cos) as transfer_manager:
-
-        # Get object with Aspera
-        future = transfer_manager.download(filepath, 'nutrition-app', filename)
-
-        # Wait for download to complete
-        future.result()
-    up = cos.upload_file(Filename=filepath,
-                         Bucket='nutrition-app', Key=filename)
-    print(up)
-    return 'ok'
+        foodResponse = requests.post('https://api.clarifai.com/v2/models/bd367be194cf45149e75f01d59f77ba7/outputs', json={
+            "inputs": [
+                {
+                    "data": {
+                        "image": {
+                            "url": imageUrl
+                        }
+                    }
+                }
+            ]
+        }, headers={'Authorization': 'Key 38163d69c5d6433fb386926d8f4dfaf0'})
+        foodItems = foodResponse.json()['outputs'][0]['data']['concepts']
+        return {
+            'foodItems': foodItems[0:5]
+        }
+    except:
+        return {
+            'msg': 'Something went wrong. Try again'
+        }
