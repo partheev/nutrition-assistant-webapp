@@ -5,4 +5,4 @@ frontend/build
 backend/.env
 backend/db.json
 backend/venv
-node_modules
+/node_modules

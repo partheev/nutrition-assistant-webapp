@@ -1,5 +1,5 @@
 import React from "react";
-import "../../styles/dashboard.css";
+import styles from "../../styles/dashboard.module.css";
 import HomeIcon from "@mui/icons-material/Home";
 import PersonIcon from "@mui/icons-material/Person";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
@@ -52,50 +52,50 @@ const Dashboard = () => {
   return (
 
     <div>
-      <div className="container">
-        <div className="navigation">
+      <div className={styles.container}>
+        <div className={styles.navigation}>
           <ul>
-            <li className={isActive ? 'active' : ''} onClick={handleClick}>
+            <li className={isActive ? styles.active : ''} onClick={handleClick}>
               <Link to="#">
-                <span className="icon">
+                <span className={styles.icon}>
                   <HomeIcon fontSize="large" />
                 </span>
-                <span className="text">Home</span>
+                <span className={styles.text}>Home</span>
               </Link>
             </li>
-            <li className={isActive1 ? 'active' : ''} onClick={handleClick1}>
+            <li className={isActive1 ? styles.active : ''} onClick={handleClick1}>
               <Link to="#">
-                <span className="icon">
+                <span className={styles.icon}>
                   <PersonIcon fontSize="large" />
                 </span>
-                <span className="text">Profile</span>
+                <span className={styles.text}>Profile</span>
               </Link>
             </li>
-            <li className={isActive2 ? 'active' : ''} onClick={handleClick2}>
+            <li className={isActive2 ? styles.active : ''} onClick={handleClick2}>
               <Link to="#">
-                <span className="icon">
+                <span className={styles.icon}>
                   <CameraAltIcon fontSize="large" />
                 </span>
-                <span className="text">capture</span>
+                <span className={styles.text}>capture</span>
               </Link>
             </li>
-            <li className={isActive3 ? 'active' : ''} onClick={handleClick3}>
+            <li className={isActive3 ? styles.active : ''} onClick={handleClick3}>
               <Link to="#">
-                <span className="icon">
+                <span className={styles.icon}>
                   <CalendarMonthIcon fontSize="large" />
                 </span>
-                <span className="text">Diet</span>
+                <span className={styles.text}>Diet</span>
               </Link>
             </li>
-            <li className={isActive4 ? 'active' : ''} onClick={handleClick4}>
+            <li className={isActive4 ? styles.active : ''} onClick={handleClick4}>
               <Link to="#">
-                <span className="icon">
+                <span className={styles.icon}>
                   <MenuIcon fontSize="large" />
                 </span>
-                <span className="text">recommended</span>
+                <span className={styles.text}>recommended</span>
               </Link>
             </li>
-            <div className="indicator"></div>
+            <div className={styles.indicator}></div>
           </ul>
         </div>
       </div>
