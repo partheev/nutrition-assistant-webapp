@@ -2,19 +2,55 @@
 from flask import Blueprint, request, current_app
 import requests
 import os
-clarifai = Blueprint('nutrition', __name__, url_prefix='/api/nutrition')
+nutrition = Blueprint('nutrition', __name__, url_prefix='/api/nutrition')
 
 nutritionix_appId = os.environ.get('nutritionix_appId')
 nutritionix_key = os.environ.get('nutritionix_key')
 
-CALORIE_ATTRI = {
+NUTRI_ATTRI = [{
     'title': 'Calorie',
     'units': 'cal',
     'attri': 208
-}
+}, {
+    'title': 'Carbohydrates',
+    'units': 'g',
+    'attri': 205
+},
+    {
+    'title': 'Proteins',
+    'units': 'g',
+    'attri': 203
+},
+    {
+    'title': 'Iron',
+    'units': 'mg',
+    'attri': 303
+},
+    {
+    'title': 'Cholesterol',
+    'units': 'mg',
+    'attri': 601
+},
+    {
+    'title': 'Fiber',
+    'units': 'mg',
+    'attri': 291
+},
+    {
+    'title': 'Calcium',
+    'units': 'mg',
+    'attri': 301
+},
+    {
+    'title': 'Fat',
+    'units': 'g',
+    'attri': 204
+},
+
+]
 
 
-@clarifai.post('/food-nutrients')
+@nutrition.post('/food-nutrients')
 def foodNutrients():
     try:
         data = request.json
@@ -24,13 +60,25 @@ def foodNutrients():
                 'msg': 'Invalid data. request body should contains [food] attributes'
             }, 400
 
-        nutritionResponse = requests.post(' https://trackapi.nutritionix.com/v2/natural/nutrients', json={
+        nutritionResponse = requests.post('https://trackapi.nutritionix.com/v2/natural/nutrients', json={
+            'query': food
         }, headers={'x-app-id': nutritionix_appId, 'x-app-key': nutritionix_key, 'x-remote-user-id': '1'})
 
-        nutrients = nutritionResponse.json()['foods'][0]['full_nutrients']
+        nutrientsList = nutritionResponse.json()['foods'][0]['full_nutrients']
+        requiredNutrients = []
+        for nutri in nutrientsList:
+            for req in NUTRI_ATTRI:
+                if req.get('attri') == nutri.get('attr_id'):
+                    requiredNutrients.append({
+                        'attri_id': nutri.get('attr_id'),
+                        'title': req.get('title'),
+                        'units': req.get('units'),
+                        'value': nutri.get('value')
+                    })
+                    break
 
         return {
-            'foodItems': nutrients
+            'nutrients': requiredNutrients
         }
     except:
         return {

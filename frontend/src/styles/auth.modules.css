@@ -1,0 +1,27 @@
+.textField {
+  width: 100%;
+  display: block;
+  padding: 14px;
+  margin-bottom: 10px;
+  margin-top: 7px;
+  background-color: #f6f6f6;
+  border: 2px solid var(--themecolor);
+  border-radius: 10px;
+}
+.label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-left: 5px;
+}
+
+.btn {
+  background-color: var(--themecolor);
+  color: 'white';
+}
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
+}

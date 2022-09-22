@@ -1,4 +1,5 @@
 
+import os
 from flask import Blueprint, request, current_app
 import requests
 clarifai = Blueprint('clarifai', __name__, url_prefix='/api/clarifai')
@@ -24,10 +25,10 @@ def detectFood():
                     }
                 }
             ]
-        }, headers={'Authorization': 'Key 38163d69c5d6433fb386926d8f4dfaf0'})
+        }, headers={'Authorization': 'Key '+str(os.environ.get('CLARIFAI_API_KEY'))})
         foodItems = foodResponse.json()['outputs'][0]['data']['concepts']
         return {
-            'foodItems': foodItems[0:5]
+            'foodItems': foodItems
         }
     except:
         return {

@@ -2,8 +2,7 @@ from flask import Flask
 import os
 from src.routes.auth import auth
 from src.routes.food import food
-from flasgger import Swagger, swag_from
-from src.config.swagger import template
+from flask_cors import CORS
 
 
 def create_app():
@@ -13,8 +12,9 @@ def create_app():
     app.config['SECRET_KEY'] = SECRET_KEY
     app.config['IMAGE_UPLOADS'] = os.path.abspath('./uploads')
 
+    CORS(app)
+
     app.register_blueprint(auth)
     app.register_blueprint(food)
-    Swagger(app, template=template)
 
     return app

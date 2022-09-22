@@ -2,6 +2,7 @@ frontend/node_modules
 frontend/build
 
 
+
 backend/.env
 backend/db.json
 backend/venv
@@ -11,3 +12,8 @@ ai-food-detection/.env
 ai-food-detection/object-storage-keys.json
 
 .vscode
+/node_modules
+
+__pycache__
+
+backend/serviceAccount.json
