@@ -115,7 +115,28 @@
     overflow: hidden;
     padding: 0rem 0rem 3rem 0rem;
   }
+  .detailsCon{
+    display: flex;
+    justify-content: space-between;
+    padding: 2.5rem 1rem 2rem 1rem;
+    font-family: 'Roboto';
+  }
+  .Img{
+    width: 60px;
+    height: 60px;
+  }
   
+}
+@media screen and (min-width: 699px){
+  .detailsCon{
+    display: flex;
+    justify-content: space-between;
+    padding: 5rem 5rem 0rem 5rem;
+    font-family: 'Roboto';
+  }
+  .Img{
+    width: 100px;
+  }
 }
 .imgTips{
   width: 250px;
@@ -138,3 +159,4 @@
   font-family: 'Roboto', sans-serif;
 font-size: 18px;
 }
+
