@@ -3,11 +3,12 @@ import { Link } from "react-router-dom";
 import styles from "../../styles/blog.module.css";
 import { Grid } from "@mui/material";
 import { Button } from "@mui/material";
-import nature from '../../images/healthtips.jpg'
-import week from '../../images/week-plan.jpg'
+import nature from '../../images/healthtips.jpg';
+import week from '../../images/week-plan.jpg';
 const Blogs = () => {
   return (
     <>
+    
       <h1 className={styles.header}>
         Life is not living, but living in health
       </h1>

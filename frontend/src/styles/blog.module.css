@@ -125,7 +125,12 @@
     width: 60px;
     height: 60px;
   }
-  
+  .container2{
+    display: none;
+  }
+  .container3{
+    display: block;
+  }
 }
 @media screen and (min-width: 699px){
   .detailsCon{
@@ -137,7 +142,11 @@
   .Img{
     width: 100px;
   }
+  .container3{
+    display: none;
+  }
 }
+
 .imgTips{
   width: 250px;
   height: 250px;
@@ -146,8 +155,6 @@
 }
 .container1{
   padding: 5rem 3rem 3rem 3rem;
-  background-color:black;
-  background: url('');
 }
 .title{
   font-family: 'Roboto', sans-serif;
@@ -159,4 +166,3 @@
   font-family: 'Roboto', sans-serif;
 font-size: 18px;
 }
-
