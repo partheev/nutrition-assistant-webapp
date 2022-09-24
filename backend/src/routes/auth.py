@@ -1,3 +1,4 @@
+from curses import noecho
 from flask import Blueprint, request
 from src.middleware.jwt import encode_auth_token
 from src.middleware.jwt import token_required
@@ -6,12 +7,6 @@ from src.config.firebase import verifyGoogleAccessToken
 import ibm_db
 
 auth = Blueprint('auth', __name__, url_prefix='/api/auth')
-
-
-@auth.get('/me')
-@token_required
-def me(current_user):
-    return current_user
 
 
 @auth.post('/login')
@@ -162,15 +157,24 @@ def userInfo(current_user):
         height = data.get('height')
         weight = data.get('weight')
         age = data.get('age')
+        gender = data.get('gender')
+        activity = data.get('activity')
+
+        if height is None or weight is None or age is None or gender is None or activity is None:
+            return{
+                'msg': 'Invalid data. Required data [height,weight,age,gender,activity]'
+            }, 400
 
         stmt = ibm_db.prepare(
-            conn, 'UPDATE users SET (height,weight,age,IS_LOGIN_PROCESS_COMPLETE) = (?,?,?,?) WHERE id = ?')
+            conn, 'UPDATE users SET (height,weight,age,IS_LOGIN_PROCESS_COMPLETE,GENDER,ACTIVITY) = (?,?,?,?,?,?) WHERE id = ?')
 
         ibm_db.bind_param(stmt, 1, height)
         ibm_db.bind_param(stmt, 2, weight)
         ibm_db.bind_param(stmt, 3, age)
         ibm_db.bind_param(stmt, 4, True)
-        ibm_db.bind_param(stmt, 5, current_user.get('ID'))
+        ibm_db.bind_param(stmt, 5, gender)
+        ibm_db.bind_param(stmt, 6, activity)
+        ibm_db.bind_param(stmt, 7, current_user.get('ID'))
 
         ibm_db.execute(stmt)
 

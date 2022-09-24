@@ -11,15 +11,22 @@ def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         token = None
-        if "Authorization" in request.headers:
-            token = request.headers["Authorization"].split(" ")
-        if len(token) < 2 and not token[1]:
+        try:
+            if "Authorization" in request.headers:
+                token = request.headers["Authorization"].split(" ")
+            if token and len(token) < 2 and not token[1]:
+                return {
+                    "msg": "Authentication Token is missing!",
+                    "data": None,
+                    "error": "Unauthorized"
+                }, 401
+            token = token[1]
+        except:
             return {
                 "msg": "Authentication Token is missing!",
                 "data": None,
                 "error": "Unauthorized"
             }, 401
-        token = token[1]
         try:
             data = jwt.decode(
                 token, current_app.config["SECRET_KEY"], algorithms=["HS256"])
