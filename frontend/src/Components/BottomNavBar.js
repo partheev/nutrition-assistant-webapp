@@ -134,7 +134,7 @@ const BottomNavBar = () => {
                             }
                             onClick={() => handleChangeScreen(SCREENS.PROFILE)}
                         >
-                            <Link to='#'>
+                            <Link to='/profile'>
                                 <span className={styles.icon}>
                                     <PersonIcon fontSize='large' />
                                 </span>
