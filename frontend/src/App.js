@@ -1,7 +1,7 @@
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import Home from './pages/Home';
-import Signup from './pages/auth/Signup';
-import Signin from './pages/auth/Signin';
+import Signup from './pages/Auth/Signup';
+import Signin from './pages/Auth/Signin';
 import Blogs from './pages/Blogs/Blogs';
 import Blog01 from './pages/Blogs/Blog01';
 import Reports from './pages/Reports';
@@ -15,7 +15,7 @@ import { useSnackbar } from 'notistack';
 import { API } from './services/apis';
 import Profile from './pages/profile/Profile';
 
-const bottomNavbarPaths = ['/dashboard', '/reports', '/blogs'];
+const bottomNavbarPaths = ['/dashboard', '/reports', '/blogs', '/profile'];
 function App() {
     const navigate = useNavigate();
     const location = useLocation();
