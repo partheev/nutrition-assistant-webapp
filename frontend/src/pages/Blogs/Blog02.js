@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import egg from "../../images/eggs.png";
 import banana from "../../images/bananas.png";
 import sweetpotato from "../../images/sweetpotato.png";
+
 const Blog02 = () => {
   const pageAnimation = {
     hidden: {
@@ -15,7 +16,7 @@ const Blog02 = () => {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.5,
+        duration: 0.4,
         when: "beforeChildren",
         staggerChildren: 0.3,
       },
