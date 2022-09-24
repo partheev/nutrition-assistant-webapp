@@ -1,9 +1,9 @@
-from curses import noecho
 from flask import Blueprint, request
 from src.middleware.jwt import encode_auth_token
 from src.middleware.jwt import token_required
 from src.config.db import conn
 from src.config.firebase import verifyGoogleAccessToken
+from src.utils import calorieCalculator
 import ibm_db
 
 auth = Blueprint('auth', __name__, url_prefix='/api/auth')
@@ -51,10 +51,23 @@ def login():
             }, 500
 
         del user['LOGIN_PASSWORD']
-        return {
-            'user': user,
-            'token': token
-        }
+
+        if user.get('IS_LOGIN_PROCESS_COMPLETE'):
+
+            maxCalories = calorieCalculator(
+                w=user['WEIGHT'], h=user['HEIGHT'], age=user['AGE'], gender=user['GENDER'], activity=user['ACTIVITY'])
+
+            return {
+                'user': user,
+                'token': token,
+                'maxCalories': maxCalories
+            }
+        else:
+            return {
+                'user': user,
+                'token': token,
+            }
+
     except:
         return {
             'msg': 'Something went wrong'
@@ -102,50 +115,69 @@ def signup():
 
 @auth.post('/google-oauth')
 def googleOauth():
-    data = request.json
-    accessToken = data.get('accessToken', None)
+    try:
 
-    if accessToken is None:
+        data = request.json
+        accessToken = data.get('accessToken', None)
+
+        if accessToken is None:
+            return{
+                'msg': 'Please provide "accessToken"'
+            }, 400
+
+        info = verifyGoogleAccessToken(accessToken)
+        name = info.get('name')
+        email = info.get('email')
+
+        stmt = ibm_db.prepare(conn, 'SELECT * FROM USERS WHERE EMAIL=?')
+        ibm_db.bind_param(stmt, 1, email)
+        ibm_db.execute(stmt)
+        user = ibm_db.fetch_assoc(stmt)
+
+        if not user:
+            sql = "SELECT * FROM NEW TABLE(INSERT INTO users (username,email,is_login_process_complete) VALUES ( ?, ? ,false))"
+            newuser_stmt = ibm_db.prepare(conn, sql)
+            ibm_db.bind_param(newuser_stmt, 1, name)
+            ibm_db.bind_param(newuser_stmt, 2, email)
+            ibm_db.execute(newuser_stmt)
+            newuser = ibm_db.fetch_assoc(newuser_stmt)
+            del newuser['LOGIN_PASSWORD']
+            token = encode_auth_token(user_id=newuser.get('ID'))
+            if token is None:
+                return {
+                    "msg": "Something went wrong. Try again"
+                }, 500
+
+            return {"token": token,
+                    "user": newuser}
+
+        else:
+            del user['LOGIN_PASSWORD']
+            token = encode_auth_token(user_id=user.get('ID'))
+            if token is None:
+                return {
+                    "msg": "Something went wrong. Try again"
+                }, 500
+
+            if user.get('IS_LOGIN_PROCESS_COMPLETE'):
+
+                maxCalories = calorieCalculator(
+                    w=user['WEIGHT'], h=user['HEIGHT'], age=user['AGE'], gender=user['GENDER'], activity=user['ACTIVITY'])
+
+                return {
+                    'user': user,
+                    'token': token,
+                    'maxCalories': maxCalories
+                }
+            else:
+                return {
+                    'user': user,
+                    'token': token,
+                }
+    except:
         return{
-            'msg': 'Please provide "accessToken"'
-        }, 400
-
-    info = verifyGoogleAccessToken(accessToken)
-    name = info.get('name')
-    email = info.get('email')
-
-    stmt = ibm_db.prepare(conn, 'SELECT * FROM USERS WHERE EMAIL=?')
-    ibm_db.bind_param(stmt, 1, email)
-    ibm_db.execute(stmt)
-    user = ibm_db.fetch_assoc(stmt)
-
-    if not user:
-        sql = "SELECT * FROM NEW TABLE(INSERT INTO users (username,email,is_login_process_complete) VALUES ( ?, ? ,false))"
-        newuser_stmt = ibm_db.prepare(conn, sql)
-        ibm_db.bind_param(newuser_stmt, 1, name)
-        ibm_db.bind_param(newuser_stmt, 2, email)
-        ibm_db.execute(newuser_stmt)
-        newuser = ibm_db.fetch_assoc(newuser_stmt)
-        del newuser['LOGIN_PASSWORD']
-        token = encode_auth_token(user_id=newuser.get('ID'))
-        if token is None:
-            return {
-                "msg": "Something went wrong. Try again"
-            }, 500
-
-        return {"token": token,
-                "user": newuser}
-
-    else:
-        del user['LOGIN_PASSWORD']
-        token = encode_auth_token(user_id=user.get('ID'))
-        if token is None:
-            return {
-                "msg": "Something went wrong. Try again"
-            }, 500
-
-        return {"token": token,
-                "user": user}
+            'msg': 'Something went wrong'
+        }, 500
 
 
 @auth.post('/user-info')
@@ -185,9 +217,13 @@ def userInfo(current_user):
         userInfo = ibm_db.fetch_assoc(user_stmt)
         del userInfo['LOGIN_PASSWORD']
 
+        maxCalories = calorieCalculator(
+            w=weight, h=height, age=age, gender=gender, activity=activity)
+
         return{
             'msg': 'User info updated',
-            'userInfo': userInfo
+            'userInfo': userInfo,
+            'maxCalories': maxCalories
         }
 
     except:
