@@ -7,8 +7,8 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import FeedIcon from '@mui/icons-material/Feed';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { Axios } from '../services/Axios';
 import { API } from '../services/apis';
+import { FullPageLoading } from './LoadingSpinner';
 const SCREENS = {
     DASHBOARD: 'DASHBOARD',
     PROFILE: 'PROFILE',
@@ -18,15 +18,19 @@ const SCREENS = {
 };
 const BottomNavBar = () => {
     const navigate = useNavigate();
+
     const imgCaptureRef = useRef(null);
+    const [isLoading, setisLoading] = useState(false);
     const [currentScreen, setcurrentScreen] = useState(SCREENS.DASHBOARD);
     const handleChangeScreen = (screen) => {
         setcurrentScreen(screen);
     };
 
     const handleSelectImage = async (foodImage) => {
+        setisLoading(true);
         try {
             const res = await API.captureFood({ foodImage });
+            setisLoading(false);
             navigate('/foodScan', {
                 state: {
                     image_url: res.image_url,
@@ -34,11 +38,13 @@ const BottomNavBar = () => {
                 },
             });
         } catch (err) {
-            navigate('/');
+            setisLoading(false);
+            navigate('/dashboard');
         }
     };
     return (
         <div>
+            <FullPageLoading isLoading={isLoading} />
             <div className={styles.container}>
                 <div className={styles.navigation}>
                     <ul>
@@ -56,7 +62,7 @@ const BottomNavBar = () => {
                                 <span className={styles.icon}>
                                     <HomeIcon fontSize='large' />
                                 </span>
-                                <span className={styles.text}>Home</span>
+                                <span className={styles.text}>Dashboard</span>
                             </Link>
                         </li>
 
@@ -72,7 +78,7 @@ const BottomNavBar = () => {
                                 <span className={styles.icon}>
                                     <CalendarMonthIcon fontSize='large' />
                                 </span>
-                                <span className={styles.text}>Diet</span>
+                                <span className={styles.text}>Reports</span>
                             </Link>
                         </li>
                         <li
@@ -102,7 +108,7 @@ const BottomNavBar = () => {
                                 <span className={styles.icon}>
                                     <CameraAltIcon fontSize='large' />
                                 </span>
-                                <span className={styles.text}>capture</span>
+                                <span className={styles.text}>Capture</span>
                             </Link>
                         </li>
                         <li
@@ -113,11 +119,11 @@ const BottomNavBar = () => {
                             }
                             onClick={() => handleChangeScreen(SCREENS.BLOGS)}
                         >
-                            <Link to='#'>
+                            <Link to='/blogs'>
                                 <span className={styles.icon}>
                                     <FeedIcon fontSize='large' />
                                 </span>
-                                <span className={styles.text}>recommended</span>
+                                <span className={styles.text}>Feed</span>
                             </Link>
                         </li>
                         <li

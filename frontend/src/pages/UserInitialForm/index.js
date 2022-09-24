@@ -1,7 +1,7 @@
 import ArrowForwardIos from '@mui/icons-material/ArrowForwardIos';
 import { Box } from '@mui/material';
 import { Container } from '@mui/system';
-import React from 'react';
+import React, { useState } from 'react';
 import '../../styles/auth.modules.css';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
@@ -15,6 +15,13 @@ import FormControl from '@mui/material/FormControl';
 const UserInitialForm = () => {
     const navigate = useNavigate();
 
+    const [state, setstate] = useState({
+        age: '',
+        gender: 'female',
+        weight: '',
+        height: '',
+        exercise: '',
+    });
     const handleLogout = () => {
         localStorage.removeItem('token', '');
         localStorage.removeItem('userInfo', '');
@@ -54,6 +61,7 @@ const UserInitialForm = () => {
                 <Container maxWidth='sm'>
                     <Box
                         sx={{
+                            mt: '2rem',
                             mx: '1rem',
                             p: '1rem',
                             backgroundColor: '#fff',
@@ -74,6 +82,13 @@ const UserInitialForm = () => {
                                 <label className='label'>Age</label>
                                 <div style={{ position: 'relative' }}>
                                     <input
+                                        value={state.age}
+                                        onChange={(e) =>
+                                            setstate({
+                                                ...state,
+                                                age: e.target.value,
+                                            })
+                                        }
                                         style={{
                                             width: '100%',
                                             paddingRight: '35px',
@@ -95,6 +110,13 @@ const UserInitialForm = () => {
                                 <FormControl>
                                     <label className='label'>Gender</label>
                                     <RadioGroup
+                                        value={state.gender}
+                                        onChange={(e) =>
+                                            setstate({
+                                                ...state,
+                                                gender: e.target.value,
+                                            })
+                                        }
                                         row
                                         aria-labelledby='demo-row-radio-buttons-group-label'
                                         name='row-radio-buttons-group'
@@ -151,6 +173,13 @@ const UserInitialForm = () => {
                                 </label>
                                 <div style={{ position: 'relative' }}>
                                     <input
+                                        value={state.weight}
+                                        onChange={(e) =>
+                                            setstate({
+                                                ...state,
+                                                weight: e.target.value,
+                                            })
+                                        }
                                         style={{ paddingRight: '35px' }}
                                         placeholder='eg. 60'
                                         className='textField'
@@ -169,6 +198,13 @@ const UserInitialForm = () => {
                                 <label className='label'>Height</label>
                                 <div style={{ position: 'relative' }}>
                                     <input
+                                        value={state.height}
+                                        onChange={(e) =>
+                                            setstate({
+                                                ...state,
+                                                height: e.target.value,
+                                            })
+                                        }
                                         style={{ paddingRight: '35px' }}
                                         placeholder='eg. 5.8'
                                         className='textField'
@@ -185,19 +221,26 @@ const UserInitialForm = () => {
                                     </span>
                                 </div>
                                 <select
+                                    value={state.exercise}
+                                    onChange={(e) =>
+                                        setstate({
+                                            ...state,
+                                            exercise: e.target.value,
+                                        })
+                                    }
                                     className='textField'
                                     style={{ marginTop: '20px' }}
                                 >
-                                    <option>Little or No Excersice</option>
+                                    <option>Little or No Exercise</option>
                                     <option>
-                                        Light : Excercise 1 to 3 days a week
+                                        Light : Exercise 1 to 3 days a week
                                     </option>
                                     <option>
-                                        Moderate : Excersice 4 to 5 times a week
+                                        Moderate : Exercise 4 to 5 times a week
                                     </option>
-                                    <option>Active : Daily Excersice</option>
+                                    <option>Active : Daily Exercise</option>
                                     <option>
-                                        Very Active : Intense Excersice Daily
+                                        Very Active : Intense Exercise Daily
                                     </option>
                                 </select>
                             </form>

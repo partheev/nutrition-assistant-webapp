@@ -33,9 +33,44 @@ const signInWithGoogle = async ({ accessToken }) => {
     ).data;
 };
 
+const userAdditionInfo = async ({ height, weight, age }) => {
+    return (
+        await Axios.post('/auth/user-info', {
+            weight,
+            height,
+            age,
+        })
+    ).data;
+};
+const foodNutritionDetails = async ({ food_item, image_url }) => {
+    return (
+        await Axios.post('/food/nutrition-details', {
+            food_item,
+            image_url,
+        })
+    ).data;
+};
+const intakeFood = async ({ consumed_food_id }) => {
+    return (
+        await Axios.post('/food/intake', {
+            consumed_food_id,
+        })
+    ).data;
+};
+const todaysConsumption = async () => {
+    return (await Axios.get('/food/todays-consumption')).data;
+};
+const lastWeekCalorieDetails = async () => {
+    return (await Axios.get('/food/last-week-nutrition-details')).data;
+};
 export const API = {
     login,
     signup,
+    userAdditionInfo,
     captureFood,
+    foodNutritionDetails,
     signInWithGoogle,
+    intakeFood,
+    todaysConsumption,
+    lastWeekCalorieDetails,
 };

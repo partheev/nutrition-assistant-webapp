@@ -10,6 +10,12 @@ import '../../styles/auth.modules.css';
 const Signup = () => {
     const navigate = useNavigate();
     const { enqueueSnackbar } = useSnackbar();
+    const [state, setstate] = useState({
+        username: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+    });
     const [isLoading, setisLoading] = useState(false);
     const handleGoogleOauth = async () => {
         setisLoading(true);
@@ -28,6 +34,35 @@ const Signup = () => {
             enqueueSnackbar('Something went wrong', { variant: 'error' });
         }
         setisLoading(false);
+    };
+
+    const handleSignUp = async () => {
+        if (state.password !== state.confirmPassword) {
+            enqueueSnackbar("Passwords doesn't match", {
+                variant: 'error',
+            });
+            return;
+        }
+        setisLoading(true);
+        try {
+            const res = API.signup({
+                email: state.email,
+                password: state.password,
+                username: state.username,
+            });
+            localStorage.setItem('token', res.token);
+            navigate('/userInitialForm');
+        } catch (err) {
+            if (err?.response?.data?.msg)
+                enqueueSnackbar(err?.response?.data?.msg, {
+                    variant: 'error',
+                });
+            else {
+                enqueueSnackbar('Something went wrong', {
+                    variant: 'error',
+                });
+            }
+        }
     };
     return (
         <div
@@ -64,6 +99,13 @@ const Signup = () => {
                             <form>
                                 <label className='label'>User Name</label>
                                 <input
+                                    value={state.username}
+                                    onChange={(e) =>
+                                        setstate({
+                                            ...state,
+                                            username: e.target.value,
+                                        })
+                                    }
                                     placeholder='Username'
                                     className='textField'
                                     type='text'
@@ -73,11 +115,25 @@ const Signup = () => {
                                     placeholder='Email'
                                     className='textField'
                                     type='email'
+                                    value={state.email}
+                                    onChange={(e) =>
+                                        setstate({
+                                            ...state,
+                                            email: e.target.value,
+                                        })
+                                    }
                                 ></input>
                                 <label placeholder='password' className='label'>
                                     Password
                                 </label>
                                 <input
+                                    value={state.password}
+                                    onChange={(e) =>
+                                        setstate({
+                                            ...state,
+                                            password: e.target.value,
+                                        })
+                                    }
                                     className='textField'
                                     type='password'
                                 ></input>
@@ -85,6 +141,13 @@ const Signup = () => {
                                     Confirm Password
                                 </label>
                                 <input
+                                    value={state.confirmPassword}
+                                    onChange={(e) =>
+                                        setstate({
+                                            ...state,
+                                            confirmPassword: e.target.value,
+                                        })
+                                    }
                                     className='textField'
                                     type='password'
                                 ></input>
@@ -98,6 +161,7 @@ const Signup = () => {
                                 }}
                             >
                                 <button
+                                    onClick={handleSignUp}
                                     disabled={isLoading}
                                     style={{
                                         display: 'flex',
