@@ -130,6 +130,24 @@ const Dashboard = () => {
                 paddingBottom: '6rem',
             }}
         >
+            <div
+                style={{
+                    boxShadow: 'rgba(0, 0, 0, 0.2) 0px 3px 3px 0px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                }}
+            >
+                <h1
+                    style={{
+                        display: 'inline-block',
+                        margin: '0 auto',
+                        padding: '0.8rem',
+                    }}
+                >
+                    {' '}
+                    Calories
+                </h1>
+            </div>
             <FullPageLoading isLoading={false} />
             <div
                 style={{
