@@ -9,9 +9,7 @@
 :root {
   --clr: #222327;
 }
-body{
-  height: 100vh;
-}
+
 .container{
     width: 100%;
     position: fixed;
@@ -82,7 +80,7 @@ body{
   background: blue;
   border-radius: 50%;
   border: 6px solid white;
-  transition: 0.5s;
+  transition: 0.3s;
 }
 
 

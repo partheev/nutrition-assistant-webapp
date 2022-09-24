@@ -153,6 +153,11 @@
   border-radius: 50%;
   object-fit: cover;
 }
+.imgTips1{
+  width: 230px;
+  height: 230px;
+  object-fit: cover;
+}
 .container1{
   padding: 5rem 3rem 3rem 3rem;
 }

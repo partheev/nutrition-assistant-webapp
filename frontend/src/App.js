@@ -4,6 +4,7 @@ import Signup from './pages/auth/Signup';
 import Signin from './pages/auth/Signin';
 import Blogs from './pages/Blogs/Blogs';
 import Blog01 from './pages/Blogs/Blog01';
+import Blog02 from './pages/Blogs/Blog02';
 import Reports from './pages/Reports';
 import Nutrients from './pages/FoodScan/Nutrients';
 import { useEffect } from 'react';
@@ -39,6 +40,7 @@ function App() {
                 <Route path='/signin' element={<Signin />} />
                 <Route path='/blog' element={<Blogs />} />
                 <Route path='/blog/healthyliving' element={<Blog01 />} />
+                <Route path='/blog/dailydiet' element={<Blog02 />} />
                 <Route path='/userInitialForm' element={<UserInitialForm />} />
                 <Route path='/dashboard' element={<Dashboard />} />
                 <Route path='/profile' element={<Profile />} />

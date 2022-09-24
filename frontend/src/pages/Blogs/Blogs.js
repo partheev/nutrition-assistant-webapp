@@ -49,7 +49,7 @@ const Blogs = () => {
                 Meal planning is the process of deciding what to eat for a certain amount of time...
                 </p>
                 <div className={styles.cardAuthor}>
-                  <Button variant="outlined" href="#">
+                  <Button variant="outlined" href="/blog/dailydiet">
                     Read More
                   </Button>
                 </div>
