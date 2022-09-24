@@ -21,7 +21,7 @@ const ExpandMore = styled((props) => {
   }),
 }))
 
-export default function FoodCard() {
+export default function FoodCard(props) {
   const [expanded, setExpanded] = React.useState(false)
 
   const handleExpandClick = () => {
@@ -29,16 +29,16 @@ export default function FoodCard() {
   }
 
   return (
-    <Card sx={{ maxWidth: 345, marginBottom: '20px' }}>
+    <Card sx={{ width: '100%', marginBottom: '20px' }}>
       <CardMedia
         component="img"
         height="194"
-        image="/static/img/healthy_diet.jpg"
+        image={props.img}
         alt="Paella dish"
       />
       <CardContent style={{ display: 'flex', justifyContent: 'space-between' }}>
         <Typography variant="body2" color="text.secondary">
-          300 cal
+          133 cal
         </Typography>
         <Typography variant="body2" color="text.secondary">
           8.30 AM
@@ -68,7 +68,7 @@ export default function FoodCard() {
               }}
             >
               <h4>Carbohydrates</h4>
-              <span>120g</span>
+              <span>75 cal</span>
             </div>
             <Divider />
             <div
@@ -81,7 +81,7 @@ export default function FoodCard() {
               }}
             >
               <h4>Fats</h4>
-              <span>90g</span>
+              <span>47 cal</span>
             </div>
             <Divider />
             <div
@@ -94,7 +94,7 @@ export default function FoodCard() {
               }}
             >
               <h4>Protien</h4>
-              <span>200g</span>
+              <span>11 cal</span>
             </div>
             <Divider />
             <div
@@ -107,7 +107,7 @@ export default function FoodCard() {
               }}
             >
               <h4>Fiber</h4>
-              <span>90g</span>
+              <span>11 cal</span>
             </div>
             <Divider />
             <div
@@ -120,7 +120,7 @@ export default function FoodCard() {
               }}
             >
               <h4>Cholestral</h4>
-              <span>20g</span>
+              <span>2 cal</span>
             </div>
             <Divider />
             <div
@@ -133,7 +133,7 @@ export default function FoodCard() {
               }}
             >
               <h4>Iron</h4>
-              <span>90g</span>
+              <span>10 cal</span>
             </div>
           </div>
         </CardContent>
