@@ -11,9 +11,17 @@ def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         token = None
-        if "Authorization" in request.headers:
-            token = request.headers["Authorization"].split(" ")[1]
-        if not token:
+        try:
+            if "Authorization" in request.headers:
+                token = request.headers["Authorization"].split(" ")
+            if token and len(token) < 2 and not token[1]:
+                return {
+                    "msg": "Authentication Token is missing!",
+                    "data": None,
+                    "error": "Unauthorized"
+                }, 401
+            token = token[1]
+        except:
             return {
                 "msg": "Authentication Token is missing!",
                 "data": None,
@@ -27,7 +35,7 @@ def token_required(f):
             ibm_db.bind_param(stmt, 1, data.get('user_id'))
             ibm_db.execute(stmt)
             current_user = ibm_db.fetch_assoc(stmt)
-            if current_user is None:
+            if current_user is False:
                 return {
                     "message": "Invalid Authentication token!",
                     "data": None,

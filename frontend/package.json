@@ -13,11 +13,12 @@
     "apexcharts": "^3.35.5",
     "axios": "^0.27.2",
     "firebase": "^9.10.0",
-    "framer-motion": "^7.3.5",
+    "framer-motion": "^7.3.6",
     "notistack": "^2.0.5",
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.0",
     "react-dom": "^18.2.0",
+    "react-fullscreen-loading": "^0.0.4",
     "react-router-dom": "^6.3.0",
     "react-scripts": "^5.0.1",
     "web-vitals": "^2.1.4"

@@ -127,9 +127,10 @@ def intake(current_user):
 @food.get('/todays-consumption')
 @token_required
 def todaysConsumption(current_user):
-    sql = 'SELECT * FROM CONSUMED_FOODS WHERE IS_INTAKE = true USER_ID = ? AND current_date  = date(consumed_on)'
+    sql = 'SELECT * FROM CONSUMED_FOODS WHERE IS_INTAKE = ? and USER_ID = ? AND current_date  = date(consumed_on)'
     stmt = ibm_db.prepare(conn, sql)
-    ibm_db.bind_param(stmt, 1, current_user.get('ID'))
+    ibm_db.bind_param(stmt, 1, True)
+    ibm_db.bind_param(stmt, 2, current_user.get('ID'))
     ibm_db.execute(stmt)
 
     foodList = []
@@ -153,9 +154,34 @@ def todaysConsumption(current_user):
         else:
             break
 
-    print(foodList)
-
     return {
         'total_nutrients': totalNutris,
         'food_items': foodList
     }
+
+
+@food.get('/last-week-nutrition-details')
+@token_required
+def lastWeek(current_user):
+    sql = 'SELECT date(consumed_on) as consumed_on,dayname(date(consumed_on)) as day, sum(calorie) as calories  FROM CONSUMED_FOODS WHERE IS_INTAKE = ? and USER_ID = ? AND (consumed_on > current date - 7 days) group by date(consumed_on) limit 7'
+    stmt = ibm_db.prepare(conn, sql)
+    ibm_db.bind_param(stmt, 1, True)
+    ibm_db.bind_param(stmt, 2, current_user.get('ID'))
+    ibm_db.execute(stmt)
+
+    weekData = []
+    while(True):
+        week = ibm_db.fetch_assoc(stmt)
+        if not week:
+            break
+        weekData.append(week)
+
+    return {
+        'weekData': weekData
+    }
+
+
+@food.get('/consumption-on')
+@token_required
+def consumptionOn(current_user):
+    pass

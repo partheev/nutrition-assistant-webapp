@@ -1,10 +1,11 @@
-import { Divider } from '@mui/material';
 import React from 'react';
 import Chart from 'react-apexcharts';
-import BottomNavBar from '../../Components/BottomNavBar';
 import DailyReport from '../../Components/DailyReport';
+import { getChartData } from '../../utils/utils';
 
-const Reports = () => {
+const Reports = ({ weekData }) => {
+    const [categories, weekCalories] = getChartData(weekData);
+
     return (
         <div
             style={{
@@ -37,21 +38,13 @@ const Reports = () => {
                         {
                             name: 'calories',
                             color: '#F0A500',
-                            data: [44, 55, 41, 67, 22, 43, 21],
+                            data: weekCalories,
                         },
                     ]}
                     height={400}
                     options={{
                         xaxis: {
-                            categories: [
-                                'Sun',
-                                'Mon',
-                                'Tue',
-                                'Wed',
-                                'Thu',
-                                'Fri',
-                                'Sat',
-                            ],
+                            categories: categories,
                         },
                         yaxis: {
                             title: {

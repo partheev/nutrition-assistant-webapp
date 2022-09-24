@@ -1,157 +1,181 @@
 @import url('https://fonts.googleapis.com/css2?family=Bungee+Spice&family=Roboto&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
-.header{
-  text-align: center;
-  padding: 2rem 0rem 2rem 0rem;
-  font-family: 'Bungee Spice', cursive;
-  color: white;
+.header {
+    text-align: center;
+    padding: 2rem 0rem 2rem 0rem;
+    font-family: 'Bungee Spice', cursive;
+    color: white;
 }
-.header1{
-  text-align: center;
-  padding: 2rem 0rem 2rem 0rem;
-  font-family: 'Bungee Spice', cursive;
-  color: white;
+.header1 {
+    text-align: center;
+    padding: 2rem 0rem 2rem 0rem;
+    font-family: 'Bungee Spice', cursive;
+    color: white;
 }
 
-.container{
-  padding: 3rem 5rem 5rem 5rem;
-  background-image: url('../images/blog-background.jpg');
-  background-repeat: no-repeat;
-  background-size: cover;
-  object-fit: cover;
-  margin-top: 0;
+.container {
+    padding: 3rem 5rem 5rem 5rem;
+    background-repeat: no-repeat;
+    background-size: cover;
+    object-fit: cover;
+    margin-top: 0;
 }
 .cardContainer {
-  width: 400px;
-  height: 460px;
-  background-color: #fff;
-  border-radius: 8px;
-  margin: auto;
-  box-shadow: 0 2px 20px rgba(0,0,0, 0.1);
-  overflow: hidden;
-  padding: 0rem 0rem 3rem 0rem;
+    width: 400px;
+    height: 460px;
+    background-color: #fff;
+    border-radius: 8px;
+    margin: auto;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    padding: 0rem 0rem 3rem 0rem;
 }
 
 .cardImage img {
-  height: 220px;
-  width: 100%;
-  border-radius: 8px 8px 0 0;
-  background-size: cover;
+    height: 220px;
+    width: 100%;
+    border-radius: 8px 8px 0 0;
+    background-size: cover;
 }
 
 .cardBody {
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  padding: 16px;
-  min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    padding: 16px;
+    min-height: 200px;
 }
 
 .cardBadge {
-  text-transform: uppercase;
-  background-color: red;
-  color: #fff;
-  padding: 2px 8px;
-  border-radius: 70px;
-  margin: 0;
-  font-size: 12px;
+    text-transform: uppercase;
+    background-color: red;
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 70px;
+    margin: 0;
+    font-size: 12px;
 }
 
 .cardBody h1 {
-  font-size: 16px;
-  margin: 8px 0;
+    font-size: 16px;
+    margin: 8px 0;
 }
 
 .cardBody p {
-  font-size: 14px;
-  margin: 8px 0 16px 0;
+    font-size: 14px;
+    margin: 8px 0 16px 0;
 }
 
 .cardAuthor {
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
 }
 
 .cardAuthor p {
-  margin: 0 16px;
-  font-size: 12px;
+    margin: 0 16px;
+    font-size: 12px;
 }
 
 .cardAuthor p:last-child {
-  color: #888;
+    color: #888;
 }
 
 .cardAuthor img {
-  border-radius: 50%;
-  height: 48px;
-  width: 48px;
-  margin-top: auto;
+    border-radius: 50%;
+    height: 48px;
+    width: 48px;
+    margin-top: auto;
 }
 @media screen and (max-width: 698px) {
-  .container{
-    padding: 3rem 3rem 3rem 2.5rem;
-  }
-  .header{
-    text-align: center;
-    padding: 2rem 0rem 2rem 0rem;
-    font-family: 'Bungee Spice', cursive;
-    color: white;
+    .container {
+        padding: 3rem 3rem 3rem 2.5rem;
+    }
+    .header {
+        text-align: center;
+        padding: 2rem 0rem 2rem 0rem;
+        font-family: 'Bungee Spice', cursive;
+        color: white;
+        font-size: 18px;
+    }
+    .header1 {
+        text-align: center;
+        padding: 2rem 0rem 2rem 0rem;
+        font-family: 'Bungee Spice', cursive;
+        color: white;
+        font-size: 18px;
+    }
+    .cardContainer {
+        width: 300px;
+        height: 480px;
+        background-color: #fff;
+        border-radius: 8px;
+        margin: auto;
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        padding: 0rem 0rem 3rem 0rem;
+    }
+}
+.imgTips {
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.container1 {
+    padding: 5rem 3rem 3rem 3rem;
+    background-color: black;
+    background: url('');
+}
+.title {
+    font-family: 'Roboto', sans-serif;
+    font-size: 24px;
+    font-weight: bold;
+    padding-bottom: 10px;
+}
+.para {
+    font-family: 'Roboto', sans-serif;
     font-size: 18px;
-  }
-  .header1{
-    text-align: center;
-    padding: 2rem 0rem 2rem 0rem;
-    font-family: 'Bungee Spice', cursive;
-    color: white;
-    font-size: 18px;
-  }
-  .cardContainer {
+}
+.cardContainer {
     width: 300px;
     height: 480px;
     background-color: #fff;
     border-radius: 8px;
     margin: auto;
-    box-shadow: 0 2px 20px rgba(0,0,0, 0.1);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     padding: 0rem 0rem 3rem 0rem;
-  }
-  .detailsCon{
+}
+.detailsCon {
     display: flex;
     justify-content: space-between;
     padding: 2.5rem 1rem 2rem 1rem;
     font-family: 'Roboto';
-  }
-  .Img{
+}
+.Img {
     width: 60px;
     height: 60px;
-  }
-  .container2{
-    display: none;
-  }
-  .container3{
-    display: block;
-  }
 }
-@media screen and (min-width: 699px){
-  .detailsCon{
-    display: flex;
-    justify-content: space-between;
-    padding: 5rem 5rem 0rem 5rem;
-    font-family: 'Roboto';
-  }
-  .Img{
-    width: 100px;
-  }
-  .container3{
+.container2 {
     display: none;
-  }
+}
+.container3 {
+    display: block;
 }
 
-.imgTips{
-  width: 250px;
-  height: 250px;
-  border-radius: 50%;
-  object-fit: cover;
+@media screen and (min-width: 699px) {
+    .detailsCon {
+        display: flex;
+        justify-content: space-between;
+        padding: 5rem 5rem 0rem 5rem;
+        font-family: 'Roboto';
+    }
+    .Img {
+        width: 100px;
+    }
+    .container3 {
+        display: none;
+    }
 }
 .imgTips1{
   width: 230px;
@@ -161,13 +185,22 @@
 .container1{
   padding: 5rem 3rem 3rem 3rem;
 }
-.title{
-  font-family: 'Roboto', sans-serif;
- font-size: 24px;
- font-weight: bold;
- padding-bottom: 10px;
+.imgTips {
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    object-fit: cover;
 }
-.para{
-  font-family: 'Roboto', sans-serif;
-font-size: 18px;
+.container1 {
+    padding: 5rem 3rem 3rem 3rem;
+}
+.title {
+    font-family: 'Roboto', sans-serif;
+    font-size: 24px;
+    font-weight: bold;
+    padding-bottom: 10px;
+}
+.para {
+    font-family: 'Roboto', sans-serif;
+    font-size: 18px;
 }

@@ -1,15 +1,46 @@
-import React, { useState } from 'react';
+import React, { Fragment } from 'react';
 import Divider from '@mui/material/Divider';
 import NoMealsIcon from '@mui/icons-material/NoMeals';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import { useNavigate } from 'react-router-dom';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import Alert from '@mui/material/Alert';
-import { Box, Container } from '@mui/material';
+import { Box } from '@mui/material';
+import { API } from '../../services/apis';
+import { useSnackbar } from 'notistack';
 
-const Nutrients = (props) => {
+const Nutrients = ({
+    setisLoading,
+    image_url,
+    setscreen,
+    nutrientsList,
+    consumedFoodId,
+}) => {
     const navigate = useNavigate();
-    const [calories, setcalories] = useState(900);
+    const { enqueueSnackbar } = useSnackbar();
+    const calories =
+        nutrientsList.find((nutri) => nutri.title === 'Calorie')?.value || 0;
+
+    const handleInTake = async () => {
+        setisLoading(true);
+        try {
+            await API.intakeFood({
+                consumed_food_id: consumedFoodId,
+            });
+            setisLoading(false);
+            navigate('/dashboard');
+        } catch (err) {
+            setisLoading(false);
+            if (err?.response?.data?.msg) {
+                enqueueSnackbar(err.response.data.msg, { variant: 'error' });
+            } else {
+                enqueueSnackbar('Something went wrong', { variant: 'error' });
+            }
+        }
+    };
+    const handleCancelIntake = () => {
+        navigate('/dashboard');
+    };
     return (
         <div style={{ paddingBottom: '5rem' }}>
             <button
@@ -20,7 +51,7 @@ const Nutrients = (props) => {
                     margin: '10px 0 0 10px',
                 }}
                 onClick={(e) => {
-                    props.setscreen(false);
+                    setscreen(false);
                 }}
             >
                 {' '}
@@ -36,7 +67,7 @@ const Nutrients = (props) => {
                         width: '90%',
                         height: '20rem',
                     }}
-                    src={props.img.url}
+                    src={image_url}
                     alt=''
                 ></img>
             </Box>
@@ -70,7 +101,7 @@ const Nutrients = (props) => {
                             color: 'var(--onOrange)',
                         }}
                     >
-                        120
+                        {Number(calories).toFixed(2)}
                     </div>
                     <span
                         style={{ fontSize: '18px', color: 'var(--onOrange)' }}
@@ -82,7 +113,8 @@ const Nutrients = (props) => {
             <div style={{ width: '85%', margin: '10px auto' }}>
                 {calories < 400 ? (
                     <Alert variant='outlined' severity='warning'>
-                        Insufficient calories. Consume more
+                        Insufficient calories. Consume more (Ignore if it's not
+                        a meal)
                     </Alert>
                 ) : calories >= 400 && calories <= 600 ? (
                     <Alert variant='outlined' severity='success'>
@@ -96,77 +128,28 @@ const Nutrients = (props) => {
             </div>
 
             <div style={{}}>
-                <div
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        margin: '0 1.5rem',
-                    }}
-                >
-                    <h4>Carbohydrates</h4>
-                    <span>120g</span>
-                </div>
-                <Divider />
-                <div
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        margin: '0 1.5rem',
-                    }}
-                >
-                    <h4>Fats</h4>
-                    <span>90g</span>
-                </div>
-                <Divider />
-                <div
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        margin: '0 1.5rem',
-                    }}
-                >
-                    <h4>Protien</h4>
-                    <span>200g</span>
-                </div>
-                <Divider />
-                <div
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        margin: '0 1.5rem',
-                    }}
-                >
-                    <h4>Fiber</h4>
-                    <span>90g</span>
-                </div>
-                <Divider />
-                <div
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        margin: '0 1.5rem',
-                    }}
-                >
-                    <h4>Cholestral</h4>
-                    <span>20g</span>
-                </div>
-                <Divider />
-                <div
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        margin: '0 1.5rem',
-                    }}
-                >
-                    <h4>Iron</h4>
-                    <span>90g</span>
-                </div>
+                {nutrientsList
+                    .filter((nutri) => nutri.title !== 'Calorie')
+                    .map((nutrient, idx, arr) => {
+                        return (
+                            <Fragment key={nutrient.attri_id}>
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                        margin: '0 1.5rem',
+                                    }}
+                                >
+                                    <h4>{nutrient.title}</h4>
+                                    <span>
+                                        {nutrient.value} {nutrient.units}
+                                    </span>
+                                </div>
+                                {idx !== arr.length - 1 && <Divider />}
+                            </Fragment>
+                        );
+                    })}
             </div>
             <div
                 style={{
@@ -179,6 +162,7 @@ const Nutrients = (props) => {
                 }}
             >
                 <button
+                    onClick={handleCancelIntake}
                     style={{
                         borderRadius: '6px',
                         fontSize: '20px',
@@ -194,6 +178,7 @@ const Nutrients = (props) => {
                     <span style={{ marginLeft: '8px' }}>Cancel</span>
                 </button>
                 <button
+                    onClick={handleInTake}
                     style={{
                         borderRadius: '6px',
                         fontSize: '20px',

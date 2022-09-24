@@ -1,13 +1,67 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
 import LinearProgress, {
     linearProgressClasses,
 } from '@mui/material/LinearProgress';
-import { styled } from '@mui/material';
+import { Alert, Grid, styled } from '@mui/material';
 import { Box, Container } from '@mui/system';
 import FoodCard from '../../Components/FoodCard';
 import BottomNavBar from '../../Components/BottomNavBar';
+import { API } from '../../services/apis';
+import { useSnackbar } from 'notistack';
+import { formatAMPM } from '../../utils/utils';
+import { FullPageLoading } from '../../Components/LoadingSpinner';
 
+const ProtienLinearProgress = styled(LinearProgress)(({ theme }) => ({
+    height: 10,
+    borderRadius: 5,
+    [`&.${linearProgressClasses.colorPrimary}`]: {
+        backgroundColor:
+            theme.palette.grey[theme.palette.mode === 'light' ? 200 : 900],
+    },
+    [`& .${linearProgressClasses.bar}`]: {
+        borderRadius: 5,
+        backgroundColor: '#DA0037',
+    },
+}));
+const FiberLinearProgress = styled(LinearProgress)(({ theme }) => ({
+    height: 10,
+    borderRadius: 5,
+    [`&.${linearProgressClasses.colorPrimary}`]: {
+        backgroundColor:
+            theme.palette.grey[theme.palette.mode === 'light' ? 200 : 900],
+    },
+    [`& .${linearProgressClasses.bar}`]: {
+        borderRadius: 5,
+        backgroundColor: '#3CCF4E',
+    },
+}));
+const CarbsLinearProgress = styled(LinearProgress)(({ theme }) => ({
+    height: 10,
+    borderRadius: 5,
+    [`&.${linearProgressClasses.colorPrimary}`]: {
+        backgroundColor:
+            theme.palette.grey[theme.palette.mode === 'light' ? 200 : 900],
+    },
+    [`& .${linearProgressClasses.bar}`]: {
+        borderRadius: 5,
+        backgroundColor: '#876445',
+    },
+}));
+const FatsLinearProgress = styled(LinearProgress)(({ theme }) => ({
+    height: 10,
+    borderRadius: 5,
+    [`&.${linearProgressClasses.colorPrimary}`]: {
+        backgroundColor:
+            theme.palette.grey[theme.palette.mode === 'light' ? 200 : 900],
+    },
+    [`& .${linearProgressClasses.bar}`]: {
+        borderRadius: 5,
+        backgroundColor: '#8758FF',
+    },
+}));
+
+const MAX_CALORIES = 2000;
 function calorieProgressColor({ value, seriesIndex, w }) {
     if (value < 35) {
         return '#42855B';
@@ -20,67 +74,54 @@ function calorieProgressColor({ value, seriesIndex, w }) {
     }
 }
 const Dashboard = () => {
-    const [todaysCaloriesPercent, settodaysCaloriesPercent] = useState(30);
-
+    const { enqueueSnackbar } = useSnackbar();
+    const [isLoading, setisLoading] = useState(false);
     const [nutrients, setnutrients] = useState({
         protiens: 0,
-        fiber: 0,
+        calcium: 0,
+        calorie: 0,
         carbs: 0,
         fats: 0,
         maxprotiens: 165,
-        maxfiber: 30,
+        maxcalcium: 2000,
         maxcarbs: 225,
         maxfats: 97,
     });
+    const [items, setitems] = useState([]);
+    const todaysCaloriesPercent =
+        nutrients.calorie > MAX_CALORIES
+            ? 100
+            : (nutrients.calorie / MAX_CALORIES) * 100;
+    console.log(nutrients);
+    const CALORIES = nutrients.calorie;
+    console.log('calories', CALORIES);
+    const fetchTodaysConsumption = async () => {
+        // setisLoading(true);
+        try {
+            const res = await API.todaysConsumption();
+            console.log('res', res);
+            const tot_nutris = res.total_nutrients;
+            setitems(res.food_items);
 
-    const ProtienLinearProgress = styled(LinearProgress)(({ theme }) => ({
-        height: 10,
-        borderRadius: 5,
-        [`&.${linearProgressClasses.colorPrimary}`]: {
-            backgroundColor:
-                theme.palette.grey[theme.palette.mode === 'light' ? 200 : 900],
-        },
-        [`& .${linearProgressClasses.bar}`]: {
-            borderRadius: 5,
-            backgroundColor: '#DA0037',
-        },
-    }));
-    const FiberLinearProgress = styled(LinearProgress)(({ theme }) => ({
-        height: 10,
-        borderRadius: 5,
-        [`&.${linearProgressClasses.colorPrimary}`]: {
-            backgroundColor:
-                theme.palette.grey[theme.palette.mode === 'light' ? 200 : 900],
-        },
-        [`& .${linearProgressClasses.bar}`]: {
-            borderRadius: 5,
-            backgroundColor: '#3CCF4E',
-        },
-    }));
-    const CarbsLinearProgress = styled(LinearProgress)(({ theme }) => ({
-        height: 10,
-        borderRadius: 5,
-        [`&.${linearProgressClasses.colorPrimary}`]: {
-            backgroundColor:
-                theme.palette.grey[theme.palette.mode === 'light' ? 200 : 900],
-        },
-        [`& .${linearProgressClasses.bar}`]: {
-            borderRadius: 5,
-            backgroundColor: '#876445',
-        },
-    }));
-    const FatsLinearProgress = styled(LinearProgress)(({ theme }) => ({
-        height: 10,
-        borderRadius: 5,
-        [`&.${linearProgressClasses.colorPrimary}`]: {
-            backgroundColor:
-                theme.palette.grey[theme.palette.mode === 'light' ? 200 : 900],
-        },
-        [`& .${linearProgressClasses.bar}`]: {
-            borderRadius: 5,
-            backgroundColor: '#8758FF',
-        },
-    }));
+            setnutrients((prevState) => ({
+                ...prevState,
+                calorie: Number(tot_nutris.CALORIE.toFixed(2)),
+                protiens: Number(tot_nutris.PROTEINS).toFixed(2),
+                calcium: Number(tot_nutris.CALCIUM.toFixed(2)),
+                carbs: Number(tot_nutris.CARBOHYDRATES.toFixed(2)),
+                fats: Number(tot_nutris.FAT.toFixed(2)),
+            }));
+        } catch (err) {
+            if (err?.response?.data?.msg)
+                enqueueSnackbar(err?.response?.data?.msg, { variant: 'error' });
+            else enqueueSnackbar('Something went wrong', { variant: 'error' });
+        }
+        setisLoading(false);
+    };
+
+    useEffect(() => {
+        fetchTodaysConsumption();
+    }, []);
 
     return (
         <div
@@ -103,7 +144,26 @@ const Dashboard = () => {
                         padding: '0.8rem',
                     }}
                 >
+                    {' '}
                     Calories
+                </h1>
+            </div>
+            <FullPageLoading isLoading={false} />
+            <div
+                style={{
+                    boxShadow: 'rgba(0, 0, 0, 0.2) 0px 3px 3px 0px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                }}
+            >
+                <h1
+                    style={{
+                        display: 'inline-block',
+                        margin: '0 auto',
+                        padding: '0.8rem',
+                    }}
+                >
+                    Dashboard
                 </h1>
             </div>
             <Chart
@@ -156,10 +216,9 @@ const Dashboard = () => {
                                     fontWeight: 700,
                                     margin: '1rem',
                                     offsetY: -10,
-
                                     show: true,
                                     formatter: (value) => {
-                                        return 20;
+                                        return CALORIES;
                                     },
                                 },
                             },
@@ -184,7 +243,13 @@ const Dashboard = () => {
                             '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
                     }}
                 >
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <div
+                        style={{
+                            marginBottom: '0.2rem',
+                            display: 'flex',
+                            alignItems: 'center',
+                        }}
+                    >
                         <div
                             style={{
                                 backgroundColor: '#DA0037',
@@ -195,7 +260,7 @@ const Dashboard = () => {
                             }}
                         ></div>
                         <p style={{ marginLeft: '10px' }}>
-                            protien{' '}
+                            Protien{' '}
                             <span>
                                 [{nutrients.protiens}g / {nutrients.maxprotiens}
                                 g]
@@ -205,10 +270,20 @@ const Dashboard = () => {
                     <ProtienLinearProgress
                         variant='determinate'
                         value={
-                            (nutrients.protiens / nutrients.maxprotiens) * 100
+                            nutrients.protiens > nutrients.maxprotiens
+                                ? 100
+                                : (nutrients.protiens / nutrients.maxprotiens) *
+                                  100
                         }
                     />
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <div
+                        style={{
+                            marginTop: '0.7rem',
+                            marginBottom: '0.2rem',
+                            display: 'flex',
+                            alignItems: 'center',
+                        }}
+                    >
                         <div
                             style={{
                                 backgroundColor: '#3CCF4E',
@@ -219,17 +294,30 @@ const Dashboard = () => {
                             }}
                         ></div>
                         <p style={{ marginLeft: '10px' }}>
-                            fiber{' '}
+                            Calcium{' '}
                             <span>
-                                [{nutrients.fiber}g / {nutrients.maxfiber}g]
+                                [{nutrients.calcium}mg / {nutrients.maxcalcium}
+                                mg]
                             </span>
                         </p>
                     </div>
                     <FiberLinearProgress
                         variant='determinate'
-                        value={(nutrients.fiber / nutrients.maxfiber) * 100}
+                        value={
+                            nutrients.calcium > nutrients.maxcalcium
+                                ? 100
+                                : (nutrients.calcium / nutrients.maxcalcium) *
+                                  100
+                        }
                     />
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <div
+                        style={{
+                            marginTop: '0.7rem',
+                            marginBottom: '0.2rem',
+                            display: 'flex',
+                            alignItems: 'center',
+                        }}
+                    >
                         <div
                             style={{
                                 backgroundColor: '#876445',
@@ -240,7 +328,7 @@ const Dashboard = () => {
                             }}
                         ></div>
                         <p style={{ marginLeft: '10px' }}>
-                            carbohydrates{' '}
+                            Carbohydrates{' '}
                             <span>
                                 [{nutrients.carbs}g / {nutrients.maxcarbs}g]
                             </span>
@@ -248,9 +336,20 @@ const Dashboard = () => {
                     </div>
                     <CarbsLinearProgress
                         variant='determinate'
-                        value={(nutrients.carbs / nutrients.maxcarbs) * 100}
+                        value={
+                            nutrients.carbs > nutrients.maxcarbs
+                                ? 100
+                                : (nutrients.carbs / nutrients.maxcarbs) * 100
+                        }
                     />
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <div
+                        style={{
+                            marginTop: '0.7rem',
+                            marginBottom: '0.2rem',
+                            display: 'flex',
+                            alignItems: 'center',
+                        }}
+                    >
                         <div
                             style={{
                                 backgroundColor: '#8758FF',
@@ -261,7 +360,7 @@ const Dashboard = () => {
                             }}
                         ></div>
                         <p style={{ marginLeft: '10px' }}>
-                            fats{' '}
+                            Fats{' '}
                             <span>
                                 [{nutrients.fats}g / {nutrients.maxfats}g]
                             </span>
@@ -269,22 +368,44 @@ const Dashboard = () => {
                     </div>
                     <FatsLinearProgress
                         variant='determinate'
-                        value={(nutrients.fats / nutrients.maxfats) * 100}
+                        value={
+                            nutrients.fats > nutrients.maxfats
+                                ? 100
+                                : (nutrients.fats / nutrients.maxfats) * 100
+                        }
                     />
                 </Box>
                 <h2 style={{ marginTop: '1.5rem', marginBottom: '1rem' }}>
                     Today's Food
                 </h2>
-                <div
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                    }}
-                >
-                    <FoodCard />
-                    <FoodCard />
-                </div>
+                {items.length === 0 && (
+                    <Alert severity='info'>
+                        No foods consumed today. Click on camera icon to capture
+                        your food.
+                    </Alert>
+                )}
+                <Grid columnSpacing={'1rem'} container>
+                    {items.map((item, idx) => {
+                        return (
+                            <Grid item sm={6} xs={12}>
+                                <FoodCard
+                                    key={idx}
+                                    calories={item.CALORIE.toFixed(2)}
+                                    carbohydrates={item.CARBOHYDRATES.toFixed(
+                                        2
+                                    )}
+                                    fats={item.FAT.toFixed(2)}
+                                    image_url={item.IMAGE}
+                                    proteins={item.PROTEINS.toFixed(2)}
+                                    time={formatAMPM(
+                                        new Date(item.CONSUMED_ON)
+                                    )}
+                                    calcium={item.CALCIUM.toFixed(2)}
+                                />
+                            </Grid>
+                        );
+                    })}
+                </Grid>
             </Container>
             <BottomNavBar />
         </div>
