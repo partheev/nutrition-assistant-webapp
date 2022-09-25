@@ -1,10 +1,8 @@
-import { Container } from '@mui/material'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import About from './About'
 import styles from '../../styles/home.module.css'
 import Services from './Services'
-import { motion } from 'framer-motion'
 
 export default function Home() {
   const navigate = useNavigate()
@@ -48,11 +46,15 @@ export default function Home() {
             src="/static/img/brandname.png"
             alt=""
           />
-          <p style={{ color: '#fff' }}>
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s,Lorem Ipsum has been the industry's standard
-            dummy text ever since the 1500s,
+          <p
+            style={{
+              color: '#fff',
+              fontSize: '18px',
+              marginTop: '2px',
+            }}
+          >
+            A Nutrition Assistant to control diet, manage food habits and keep
+            good health.
           </p>
           <div style={{ marginTop: '20px' }}>
             <button

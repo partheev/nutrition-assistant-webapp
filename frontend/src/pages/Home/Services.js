@@ -4,28 +4,40 @@ import { motion } from 'framer-motion'
 
 const titleVariants = {
   offscreen: {
-    x: -150,
+    x: 40,
   },
   onscreen: {
     x: 0,
     transition: {
       type: 'spring',
       bounce: 0.2,
-      duration: 0.8,
     },
   },
 }
 
 const descVariants = {
   offscreen: {
-    x: -150,
+    x: 40,
   },
   onscreen: {
     x: 0,
     transition: {
       type: 'spring',
       bounce: 0.5,
-      duration: 1,
+    },
+  },
+}
+const imgVariants = {
+  offscreen: {
+    x: -100,
+    opacity: 0,
+  },
+  onscreen: {
+    x: 0,
+    opacity: 1,
+    transition: {
+      type: 'spring',
+      duration: 1.5,
     },
   },
 }
@@ -50,9 +62,10 @@ const Services = () => {
           className={styles.serviceslayout}
         >
           <motion.img
-            whileHover={{ scale: 1.1 }}
-            transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+            // whileHover={{ scale: 1.1 }}
+            // transition={{ type: 'spring', stiffness: 400, damping: 10 }}
             className={styles.serviceimg}
+            variants={imgVariants}
             src="/static/img/dietsnap.gif"
             alt=""
           ></motion.img>
@@ -86,8 +99,9 @@ const Services = () => {
           className={styles.serviceslayout}
         >
           <motion.img
-            whileHover={{ scale: 1.1 }}
-            transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+            // whileHover={{ scale: 1.1 }}
+            // transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+            variants={imgVariants}
             className={styles.serviceimg}
             src="/static/img/dietsnap.gif"
             alt=""
@@ -122,8 +136,9 @@ const Services = () => {
           className={styles.serviceslayout}
         >
           <motion.img
-            whileHover={{ scale: 1.1 }}
-            transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+            // whileHover={{ scale: 1.1 }}
+            // transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+            variants={imgVariants}
             className={styles.serviceimg}
             src="/static/img/dietsnap.gif"
             alt=""
