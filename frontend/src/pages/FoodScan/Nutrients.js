@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useContext } from 'react';
 import Divider from '@mui/material/Divider';
 import NoMealsIcon from '@mui/icons-material/NoMeals';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
@@ -8,6 +8,7 @@ import Alert from '@mui/material/Alert';
 import { Box } from '@mui/material';
 import { API } from '../../services/apis';
 import { useSnackbar } from 'notistack';
+import { AppContext } from '../../Context/AppContext';
 
 const Nutrients = ({
     setisLoading,
@@ -18,6 +19,7 @@ const Nutrients = ({
 }) => {
     const navigate = useNavigate();
     const { enqueueSnackbar } = useSnackbar();
+    const { fetchTodaysConsumption } = useContext(AppContext);
     const calories =
         nutrientsList.find((nutri) => nutri.title === 'Calorie')?.value || 0;
 
@@ -29,6 +31,7 @@ const Nutrients = ({
             });
             setisLoading(false);
             navigate('/dashboard');
+            fetchTodaysConsumption();
         } catch (err) {
             setisLoading(false);
             if (err?.response?.data?.msg) {

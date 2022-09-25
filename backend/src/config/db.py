@@ -9,4 +9,8 @@ PORT = os.environ.get('DB_PORT')
 
 connStr = f'SECURITY=SSL;SSLServerCertificate=DigiCertGlobalRootCA.crt;database={DATABASE};hostname={HOSTNAME};port={PORT};protocol=tcpip;uid={UID};pwd={PWD};'
 conn = ibm_db.connect(connStr, '', '')
-print('Database connected')
+if conn:
+    print('Database connected')
+else:
+    print('Db2 database not connected')
+    exit(1)

@@ -1,11 +1,12 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styles from '../../styles/blog.module.css';
 import { Box, Container, Grid } from '@mui/material';
 import { Button } from '@mui/material';
 import nature from '../../images/healthtips.jpg';
 import week from '../../images/week-plan.jpg';
 const Blogs = () => {
+    const navigate = useNavigate();
     return (
         <div
             style={{
@@ -56,7 +57,9 @@ const Blogs = () => {
                                     <div className={styles.cardAuthor}>
                                         <Button
                                             variant='outlined'
-                                            href='/blog/healthyliving'
+                                            onClick={() =>
+                                                navigate('/blog/healthyliving')
+                                            }
                                             className={styles.btnInfo}
                                         >
                                             Read More
@@ -89,7 +92,12 @@ const Blogs = () => {
                                         time...
                                     </p>
                                     <div className={styles.cardAuthor}>
-                                        <Button variant='outlined' href='#'>
+                                        <Button
+                                            variant='outlined'
+                                            onClick={() =>
+                                                navigate('/blog/diet')
+                                            }
+                                        >
                                             Read More
                                         </Button>
                                     </div>

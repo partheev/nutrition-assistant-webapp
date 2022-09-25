@@ -1,3 +1,3 @@
 FLASK_DEBUG=True
-FLASK_APP=src.server:create_app
+FLASK_APP=src
 FLASK_ENV=production

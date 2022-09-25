@@ -55,7 +55,7 @@ export default function FoodCard({
                 </Typography>
             </CardContent>
             <CardActions disableSpacing>
-                <Typography>Satisfying calories</Typography>
+                <Typography>Consumed nutrients</Typography>
                 <ExpandMore
                     expand={expanded}
                     onClick={handleExpandClick}

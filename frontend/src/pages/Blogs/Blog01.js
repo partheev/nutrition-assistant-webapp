@@ -1,4 +1,5 @@
 import React from 'react';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import nature from '../../images/healthtips.jpg';
 import blog1 from '../../images/blog1.jpg';
 import blog2 from '../../images/blog2.jpg';
@@ -8,9 +9,46 @@ import blog5 from '../../images/blog5.jpg';
 import blog6 from '../../images/blog6.jpg';
 import { Grid, Container, Box } from '@mui/material';
 import styles from '../../styles/blog.module.css';
+import { useNavigate } from 'react-router-dom';
 const Blog01 = () => {
+    const navigate = useNavigate();
     return (
-        <>
+        <div style={{ backgroundColor: 'var(--backgroundColor)' }}>
+            <div
+                style={{
+                    boxShadow: 'rgba(0, 0, 0, 0.2) 0px 3px 3px 0px',
+                }}
+            >
+                <Container maxWidth='lg'>
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            position: 'relative',
+                        }}
+                    >
+                        <ArrowBackIosIcon
+                            onClick={() => navigate('/blogs')}
+                            sx={{
+                                cursor: 'pointer',
+                                position: 'absolute',
+                                top: '1.3rem',
+                                left: 0,
+                                fontSize: '2rem',
+                            }}
+                        />
+                        <h1
+                            style={{
+                                display: 'inline-block',
+                                margin: '0 auto',
+                                padding: '0.8rem',
+                            }}
+                        >
+                            Blogs
+                        </h1>
+                    </div>
+                </Container>
+            </div>
             <Container maxWidth='lg' sx={{ mt: 2, pb: 5 }}>
                 <Box>
                     <div className={styles.container2}>
@@ -511,7 +549,7 @@ const Blog01 = () => {
                     </div>
                 </Box>
             </Container>
-        </>
+        </div>
     );
 };
 

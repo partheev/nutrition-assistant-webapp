@@ -9,6 +9,19 @@ import ibm_db
 auth = Blueprint('auth', __name__, url_prefix='/api/auth')
 
 
+@auth.get('/me')
+@token_required
+def me(current_user):
+    del current_user['LOGIN_PASSWORD']
+    maxCalories = calorieCalculator(
+        w=current_user['WEIGHT'], h=current_user['HEIGHT'], age=current_user['AGE'], gender=current_user['GENDER'], activity=current_user['ACTIVITY'])
+
+    return {
+        'userInfo': current_user,
+        'maxCalories': maxCalories
+    }
+
+
 @auth.post('/login')
 def login():
     try:
@@ -186,11 +199,11 @@ def userInfo(current_user):
     try:
         data = request.json
 
-        height = data.get('height')
-        weight = data.get('weight')
-        age = data.get('age')
+        height = float(data.get('height'))
+        weight = float(data.get('weight'))
+        age = float(data.get('age'))
         gender = data.get('gender')
-        activity = data.get('activity')
+        activity = float(data.get('activity'))
 
         if height is None or weight is None or age is None or gender is None or activity is None:
             return{
@@ -226,7 +239,12 @@ def userInfo(current_user):
             'maxCalories': maxCalories
         }
 
-    except:
+    except TypeError:
+        return {
+            'msg': 'Invalid data'
+        }, 400
+    except Exception as e:
+        print(e)
         return{
             'msg': 'Something went wrong. Try again'
         }, 500

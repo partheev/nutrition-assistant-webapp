@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import nature from '../../images/profile.jpg';
 import { Button } from '@mui/material';
 import styles from '../../styles/blog.module.css';
+import { AppContext } from '../../Context/AppContext';
 const Profile = () => {
+    const { userInfo, handleLogout } = useContext(AppContext);
     return (
         <div
             style={{
+                minHeight: '100vh',
                 backgroundColor: 'var(--backgroundColor)',
                 paddingBottom: '5rem',
             }}
@@ -34,7 +37,7 @@ const Profile = () => {
                 <Box
                     sx={{
                         bgcolor: 'white',
-                        height: '100vh',
+                        // height: '100vh',
                         p: 5,
                         borderRadius: '16px',
                         boxShadow: 10,
@@ -57,8 +60,10 @@ const Profile = () => {
                             />
                         </div>
                         <div>
-                            <h3 style={{ color: 'blue' }}>Mr.John</h3>
-                            <p>Johndoe@gmail.com</p>
+                            <h3 style={{ color: 'blue' }}>
+                                {userInfo.USERNAME}
+                            </h3>
+                            <p>{userInfo.EMAIL}</p>
                         </div>
                     </div>
 
@@ -73,7 +78,7 @@ const Profile = () => {
                         </div>
                         <div>
                             <p>
-                                <span>30</span> Years
+                                <span>{userInfo.AGE}</span> Years
                             </p>
                         </div>
                     </div>
@@ -87,7 +92,7 @@ const Profile = () => {
                             <h3>Gender</h3>
                         </div>
                         <div>
-                            <p>Male</p>
+                            <p>{userInfo.GENDER?.toUpperCase()}</p>
                         </div>
                     </div>
                     <div
@@ -100,7 +105,7 @@ const Profile = () => {
                             <h3>Height</h3>
                         </div>
                         <div>
-                            <p>6 feet</p>
+                            <p>{userInfo.HEIGHT} cms</p>
                         </div>
                     </div>
                     <div
@@ -114,7 +119,7 @@ const Profile = () => {
                         </div>
                         <div>
                             <p>
-                                <span>80</span> kg
+                                <span>{userInfo.WEIGHT}</span> kg
                             </p>
                         </div>
                     </div>
@@ -128,7 +133,11 @@ const Profile = () => {
                         }}
                     >
                         <div>
-                            <Button variant='contained' color='error' href='/'>
+                            <Button
+                                onClick={handleLogout}
+                                variant='contained'
+                                color='error'
+                            >
                                 Logout
                             </Button>
                         </div>

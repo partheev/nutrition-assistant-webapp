@@ -114,6 +114,9 @@
         overflow: hidden;
         padding: 0rem 0rem 3rem 0rem;
     }
+    .container2 {
+        display: none;
+    }
 }
 .imgTips {
     width: 250px;
@@ -156,12 +159,8 @@
     width: 60px;
     height: 60px;
 }
-.container2 {
-    display: none;
-}
-.container3 {
-    display: block;
-}
+
+
 
 @media screen and (min-width: 699px) {
     .detailsCon {
@@ -176,17 +175,25 @@
     .container3 {
         display: none;
     }
+    .container2 {
+        display: block;
+    }
 }
-
+.imgTips1{
+  width: 230px;
+  height: 230px;
+  object-fit: cover;
+}
+.container1{
+  padding: 5rem 3rem 3rem 3rem;
+}
 .imgTips {
     width: 250px;
     height: 250px;
     border-radius: 50%;
     object-fit: cover;
 }
-.container1 {
-    padding: 5rem 3rem 3rem 3rem;
-}
+
 .title {
     font-family: 'Roboto', sans-serif;
     font-size: 24px;

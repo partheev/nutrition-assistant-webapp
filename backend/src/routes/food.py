@@ -12,8 +12,8 @@ food = Blueprint('food', __name__, url_prefix='/api/food')
 
 
 @food.post('/capture-food')
-# @token_required
-def capture_food():
+@token_required
+def capture_food(current_user):
     try:
 
         if not request.files:
@@ -23,7 +23,6 @@ def capture_food():
         image = request.files.get('foodImage')
         ext = image.filename.split(".")[-1]
         filename = str(uuid.uuid4()) + '.'+ext
-
         filepath = os.path.join(
             str(current_app.config.get('IMAGE_UPLOADS')), filename)
         image.save(filepath)
@@ -46,11 +45,13 @@ def capture_food():
             'image_url': image_url,
             'foodItems': foodItems
         }
-    except:
+    except Exception as e:
         if os.path.exists(filepath):
             os.remove(filepath)
         return{
-            'msg': 'Something went wrong'
+
+            'msg': 'Something went wrong',
+            'error': str(e)
         }, 500
 
 

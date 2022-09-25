@@ -4,10 +4,9 @@ def getFileStorageURL(filename):
 
 
 def calorieCalculator(w, h, age, gender, activity):
-    w = w*2.2
     bmr = 0
     if(gender == 'male'):
-        bmr = 65 + (6.2 * w) + ((12.7 * h) * w) - (6.8 * age)
+        bmr = 66.47 + (13.75 * w) + (5.003 * h) - (6.755 * age)
     else:
-        bmr = 655 + (4.3 * w) + (4.3 * h) - (4.7 * age)
+        bmr = 655.1 + (9.563 * w) + (1.850 * h) - (4.676 * age)
     return int(bmr*activity)

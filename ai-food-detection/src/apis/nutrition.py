@@ -80,7 +80,8 @@ def foodNutrients():
         return {
             'nutrients': requiredNutrients
         }
-    except:
+    except Exception as e:
+        print(e)
         return {
             'msg': 'Something went wrong. Try again'
         }, 500
