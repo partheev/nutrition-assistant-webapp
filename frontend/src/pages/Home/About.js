@@ -4,24 +4,27 @@ import { motion } from 'framer-motion'
 
 const imgVariants = {
   offscreen: {
-    y: 250,
+    y: 200,
+    opacity: 0.1,
   },
   onscreen: {
     y: 0,
+
+    opacity: 1,
     transition: {
       type: 'spring',
-      duration: 0.8,
+      duration: 1.4,
     },
   },
 }
 const textVariants = {
-  offscreen: {
-    scale: 0,
-  },
+  // offscreen: {
+  //   scale: 0,
+  // },
   onscreen: {
-    scale: 1,
+    // scale: 1,
     transition: {
-      duration: 1,
+      type: 'spring',
     },
   },
 }

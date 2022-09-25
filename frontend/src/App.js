@@ -1,86 +1,95 @@
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-import Home from './pages/Home';
-import Signup from './pages/Auth/Signup';
-import Signin from './pages/Auth/Signin';
-import Blogs from './pages/Blogs/Blogs';
-import Blog01 from './pages/Blogs/Blog01';
-import Reports from './pages/Reports';
-import Nutrients from './pages/FoodScan/Nutrients';
-import { useEffect, useState } from 'react';
-import Dashboard from './pages/Dashboard';
-import BottomNavBar from './Components/BottomNavBar';
-import FoodScan from './pages/FoodScan';
-import UserInitialForm from './pages/UserInitialForm';
-import { useSnackbar } from 'notistack';
-import { API } from './services/apis';
-import Profile from './pages/profile/Profile';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom'
+import Home from './pages/Home'
+import Signup from './pages/Auth/Signup'
+import Signin from './pages/Auth/Signin'
+import Blogs from './pages/Blogs/Blogs'
+import Blog01 from './pages/Blogs/Blog01'
+import Reports from './pages/Reports'
+import Nutrients from './pages/FoodScan/Nutrients'
+import { useEffect, useState } from 'react'
+import Dashboard from './pages/Dashboard'
+import BottomNavBar from './Components/BottomNavBar'
+import FoodScan from './pages/FoodScan'
+import UserInitialForm from './pages/UserInitialForm'
+import { useSnackbar } from 'notistack'
+import { API } from './services/apis'
+import Profile from './pages/profile/Profile'
 
-const bottomNavbarPaths = ['/dashboard', '/reports', '/blogs', '/profile'];
+const bottomNavbarPaths = ['/dashboard', '/reports', '/blogs', '/profile']
 function App() {
-    const navigate = useNavigate();
-    const location = useLocation();
-    const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate()
+  const location = useLocation()
+  const { enqueueSnackbar } = useSnackbar()
 
-    // GLOBAL APP STATE
-    const [weekData, setweekData] = useState([]);
+  // GLOBAL APP STATE
+  const [weekData, setweekData] = useState([
+    {
+      CALORIES: 835.2447999999999,
+      CONSUMED_ON: 'Fri, 23 Sep 2022 00:00:00 GMT',
+      DAY: 'Friday',
+    },
+    {
+      CALORIES: 101.32,
+      CONSUMED_ON: 'Sat, 24 Sep 2022 00:00:00 GMT',
+      DAY: 'Saturday',
+    },
+  ])
 
-    const fetchWeekData = async () => {
-        try {
-            const res = await API.lastWeekCalorieDetails();
-            setweekData(res.weekData);
-        } catch (err) {
-            if (err?.response?.data?.msg) {
-                enqueueSnackbar(err?.response?.data?.msg, {
-                    variant: 'error',
-                });
-            } else {
-                enqueueSnackbar('Something went wrong', {
-                    variant: 'error',
-                });
-            }
-        }
-    };
+  const fetchWeekData = async () => {
+    try {
+      const res = await API.lastWeekCalorieDetails()
+      setweekData(res.weekData)
+    } catch (err) {
+      if (err?.response?.data?.msg) {
+        enqueueSnackbar(err?.response?.data?.msg, {
+          variant: 'error',
+        })
+      } else {
+        enqueueSnackbar('Something went wrong', {
+          variant: 'error',
+        })
+      }
+    }
+  }
 
-    useEffect(() => {
-        fetchWeekData();
-    }, []);
+  useEffect(() => {
+    fetchWeekData()
+  }, [])
 
-    useEffect(() => {
-        try {
-            const token = localStorage.getItem('token');
-            const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-            if (token) {
-                if (userInfo?.IS_LOGIN_PROCESS_COMPLETE) navigate('/dashboard');
-                else navigate('/userInitialForm');
-            } else {
-                navigate('/');
-            }
-        } catch (err) {
-            navigate('/');
-        }
-    }, []);
+  // useEffect(() => {
+  //     try {
+  //         const token = localStorage.getItem('token');
+  //         const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+  //         if (token) {
+  //             if (userInfo?.IS_LOGIN_PROCESS_COMPLETE) navigate('/dashboard');
+  //             else navigate('/userInitialForm');
+  //         } else {
+  //             navigate('/');
+  //         }
+  //     } catch (err) {
+  //         navigate('/');
+  //     }
+  // }, []);
 
-    return (
-        <>
-            <Routes>
-                <Route path='/' element={<Home />} />
-                <Route path='/signup' element={<Signup />} />
-                <Route path='/signin' element={<Signin />} />
-                <Route path='/blogs' element={<Blogs />} />
-                <Route path='/blog/healthyliving' element={<Blog01 />} />
-                <Route path='/userInitialForm' element={<UserInitialForm />} />
-                <Route path='/dashboard' element={<Dashboard />} />
-                <Route
-                    path='/reports'
-                    element={<Reports weekData={weekData} />}
-                />
-                <Route path='/profile' element={<Profile />} />
-                <Route path='/foodScan' element={<FoodScan />} />
-                <Route path='/nutrients' element={<Nutrients />} />
-            </Routes>
-            {bottomNavbarPaths.includes(location.pathname) && <BottomNavBar />}
-        </>
-    );
+  return (
+    <>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/signin" element={<Signin />} />
+        <Route path="/blogs" element={<Blogs />} />
+        <Route path="/blog/healthyliving" element={<Blog01 />} />
+
+        <Route path="/userInitialForm" element={<UserInitialForm />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/reports" element={<Reports weekData={weekData} />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/foodScan" element={<FoodScan />} />
+        <Route path="/nutrients" element={<Nutrients />} />
+      </Routes>
+      {bottomNavbarPaths.includes(location.pathname) && <BottomNavBar />}
+    </>
+  )
 }
 
-export default App;
+export default App

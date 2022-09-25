@@ -65,7 +65,11 @@ const Signin = () => {
       }}
     >
       <div>
-        <h1 style={{ marginTop: 0, padding: '20px 0 0 20px' }}>Brand</h1>
+        <img
+          style={{ width: '4rem', padding: '6px 0 0 6px' }}
+          src="/static/img/logo_crop.png"
+          alt=""
+        />
         <Container maxWidth="sm" style={{ marginTop: '10px' }}>
           <Box
             sx={{
