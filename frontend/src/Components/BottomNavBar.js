@@ -119,11 +119,7 @@ const BottomNavBar = () => {
                             }
                             onClick={() => handleChangeScreen(SCREENS.BLOGS)}
                         >
-<<<<<<< HEAD
                             <Link to='/reports'>
-=======
-                            <Link to='/blogs'>
->>>>>>> main
                                 <span className={styles.icon}>
                                     <FeedIcon fontSize='large' />
                                 </span>

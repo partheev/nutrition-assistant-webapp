@@ -30,35 +30,6 @@ const Blogs = () => {
                     Blogs
                 </h1>
             </div>
-<<<<<<< HEAD
-          </Grid>
-          <Grid item md={6} xs={12}>
-            <div className={styles.cardContainer}>
-              <div className={styles.cardImage}>
-                <img
-                  src={week}
-                  alt="a brand new sports car"
-                />
-              </div>
-              <div className={styles.cardBody}>
-                <span className={styles.cardBadge}>Daily Diet</span>
-                <h1>Why is it important to make a meal plan?</h1>
-                <p className={styles.cardBubtitle}>
-                Meal planning is the process of deciding what to eat for a certain amount of time...
-                </p>
-                <div className={styles.cardAuthor}>
-                  <Button variant="outlined" href="/blog/dailydiet">
-                    Read More
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </Grid>
-        </Grid>
-      </div>
-    </>
-  );
-=======
             <Container maxWidth='lg'>
                 <Box sx={{ mt: '2rem', mx: '2rem', pb: '8rem' }}>
                     <Grid container spacing={3}>
@@ -130,7 +101,6 @@ const Blogs = () => {
             </Container>
         </div>
     );
->>>>>>> main
 };
 
 export default Blogs;

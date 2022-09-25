@@ -10,11 +10,7 @@
     --clr: rgb(87, 87, 87);
 }
 
-<<<<<<< HEAD
-.container{
-=======
 .container {
->>>>>>> main
     width: 100%;
     position: fixed;
     bottom: 0;
@@ -78,16 +74,6 @@
     transform: translateY(10px);
 }
 .indicator {
-<<<<<<< HEAD
-  position: absolute;
-  top: -50%;
-  width: 70px;
-  height: 70px;
-  background: blue;
-  border-radius: 50%;
-  border: 6px solid white;
-  transition: 0.3s;
-=======
     position: absolute;
     top: -50%;
     width: 70px;
@@ -96,7 +82,6 @@
     border-radius: 50%;
     border: 6px solid white;
     transition: 0.5s;
->>>>>>> main
 }
 
 /* Indicator Transitions */
