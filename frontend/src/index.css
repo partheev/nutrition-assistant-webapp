@@ -1,26 +1,27 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 
 body {
-    margin: 0;
-    font-family: Poppins;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  font-family: Poppins;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-        monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
 }
 
 :root {
-    /* --themecolor: #dd790f; */
-    --themecolor: #e38b29;
-    --onOrange: #fdeedc;
-    --backgroundColor: #f2f2ef;
+  /* --themecolor: #dd790f; */
+  --themecolor: #e38b29;
+  --onOrange: #fdeedc;
+  --backgroundColor: #f2f2ef;
+  --lightOrange: #ffd8a9;
 }
 button {
-    cursor: pointer;
+  cursor: pointer;
 }
 /* pallete: https://colorhunt.co/palette/fdeedcffd8a9f1a661e38b29 */

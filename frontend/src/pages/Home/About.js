@@ -33,23 +33,24 @@ const About = () => {
   return (
     <div>
       {' '}
-      <motion.div
-        initial="offscreen"
-        whileInView="onscreen"
-        viewport={{ once: true, amount: 0.8 }}
-        className={styles.why}
-      >
-        <motion.img
-          variants={imgVariants}
-          style={{
-            width: '19rem',
-            height: '12rem',
-            boxShadow:
-              '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
-          }}
-          src="/static/img/snack-bento-box.webp"
-          alt=""
-        ></motion.img>
+      <div className={styles.why}>
+        <motion.div
+          initial="offscreen"
+          whileInView="onscreen"
+          viewport={{ once: true, amount: 0.8 }}
+        >
+          <motion.img
+            variants={imgVariants}
+            style={{
+              width: '19rem',
+              height: '12rem',
+              boxShadow:
+                '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+            }}
+            src="/static/img/snack-bento-box.webp"
+            alt=""
+          ></motion.img>
+        </motion.div>
         <motion.h1
           variants={textVariants}
           className={styles.text}
@@ -57,11 +58,8 @@ const About = () => {
         >
           Relax, We will take care of your healthy DIET
         </motion.h1>
-      </motion.div>
-      <motion.div
-        initial="offscreen"
-        whileInView="onscreen"
-        viewport={{ once: true, amount: 0.8 }}
+      </div>
+      <div
         className={`${styles.why} ${styles.rev}`}
         style={{ backgroundColor: '#f6f6f6' }}
       >
@@ -72,35 +70,39 @@ const About = () => {
         >
           Just take a snap, And know what you are taking
         </motion.h1>
-        <motion.img
-          variants={imgVariants}
-          style={{
-            width: '17rem',
-            height: '22rem',
-            // boxShadow:
-            //   '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
-          }}
-          src="/static/img/takingSnap.webp"
-          alt=""
-        ></motion.img>
-      </motion.div>
-      <motion.div
-        initial="offscreen"
-        whileInView="onscreen"
-        viewport={{ once: true, amount: 0.8 }}
-        className={styles.why}
-      >
-        <motion.img
-          variants={imgVariants}
-          style={{
-            width: '16rem',
-            height: '16rem',
-            // boxShadow:
-            //   '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
-          }}
-          src="/static/img/data-analytic-icon-6.png"
-          alt=""
-        ></motion.img>
+
+        <motion.div
+          initial="offscreen"
+          whileInView="onscreen"
+          viewport={{ once: true, amount: 0.8 }}
+        >
+          <motion.img
+            variants={imgVariants}
+            style={{
+              width: '17rem',
+              height: '22rem',
+            }}
+            src="/static/img/takingSnap.webp"
+            alt=""
+          ></motion.img>
+        </motion.div>
+      </div>
+      <div className={styles.why}>
+        <motion.div
+          initial="offscreen"
+          whileInView="onscreen"
+          viewport={{ once: true, amount: 0.8 }}
+        >
+          <motion.img
+            variants={imgVariants}
+            style={{
+              width: '16rem',
+              height: '16rem',
+            }}
+            src="/static/img/data-analytic-icon-6.png"
+            alt=""
+          ></motion.img>
+        </motion.div>
         <motion.h1
           variants={textVariants}
           className={styles.text}
@@ -109,7 +111,7 @@ const About = () => {
           We let you track and compare your diet over past week by smooth
           analytics
         </motion.h1>
-      </motion.div>
+      </div>
     </div>
   )
 }
