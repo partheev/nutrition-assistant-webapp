@@ -55,15 +55,11 @@ const Services = () => {
           Our Services
         </h1>
 
-        <motion.div
-          initial="offscreen"
-          whileInView="onscreen"
-          viewport={{ once: true, amount: 0.8 }}
-          className={styles.serviceslayout}
-        >
+        <motion.div className={styles.serviceslayout}>
           <motion.img
-            // whileHover={{ scale: 1.1 }}
-            // transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+            initial="offscreen"
+            whileInView="onscreen"
+            viewport={{ once: true }}
             className={styles.serviceimg}
             variants={imgVariants}
             src="/static/img/dietsnap.gif"
@@ -71,6 +67,9 @@ const Services = () => {
           ></motion.img>
           <div className={styles.servicetext}>
             <motion.h1
+              initial="offscreen"
+              whileInView="onscreen"
+              viewport={{ once: true }}
               variants={titleVariants}
               style={{ marginBottom: '12px' }}
             >
@@ -92,15 +91,11 @@ const Services = () => {
             margin: '100px auto',
           }}
         ></hr>
-        <motion.div
-          initial="offscreen"
-          whileInView="onscreen"
-          viewport={{ once: true, amount: 0.8 }}
-          className={styles.serviceslayout}
-        >
+        <motion.div className={styles.serviceslayout}>
           <motion.img
-            // whileHover={{ scale: 1.1 }}
-            // transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+            initial="offscreen"
+            whileInView="onscreen"
+            viewport={{ once: true }}
             variants={imgVariants}
             className={styles.serviceimg}
             src="/static/img/dietsnap.gif"
@@ -108,6 +103,9 @@ const Services = () => {
           ></motion.img>
           <div className={styles.servicetext}>
             <motion.h1
+              initial="offscreen"
+              whileInView="onscreen"
+              viewport={{ once: true }}
               variants={titleVariants}
               style={{ marginBottom: '12px' }}
             >
@@ -129,15 +127,11 @@ const Services = () => {
             margin: '100px auto',
           }}
         ></hr>
-        <motion.div
-          initial="offscreen"
-          whileInView="onscreen"
-          viewport={{ once: true, amount: 0.8 }}
-          className={styles.serviceslayout}
-        >
+        <motion.div className={styles.serviceslayout}>
           <motion.img
-            // whileHover={{ scale: 1.1 }}
-            // transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+            initial="offscreen"
+            whileInView="onscreen"
+            viewport={{ once: true }}
             variants={imgVariants}
             className={styles.serviceimg}
             src="/static/img/dietsnap.gif"
@@ -145,6 +139,9 @@ const Services = () => {
           ></motion.img>
           <div className={styles.servicetext}>
             <motion.h1
+              initial="offscreen"
+              whileInView="onscreen"
+              viewport={{ once: true }}
               variants={titleVariants}
               style={{ marginBottom: '12px' }}
             >
