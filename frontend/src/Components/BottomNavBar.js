@@ -5,7 +5,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import FeedIcon from '@mui/icons-material/Feed';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { API } from '../services/apis';
 import { FullPageLoading } from './LoadingSpinner';
@@ -18,7 +18,7 @@ const SCREENS = {
 };
 const BottomNavBar = () => {
     const navigate = useNavigate();
-
+    const location = useLocation();
     const imgCaptureRef = useRef(null);
     const [isLoading, setisLoading] = useState(false);
     const [currentScreen, setcurrentScreen] = useState(SCREENS.DASHBOARD);
@@ -33,6 +33,7 @@ const BottomNavBar = () => {
             setisLoading(false);
             navigate('/foodScan', {
                 state: {
+                    imageBlob: URL.createObjectURL(foodImage),
                     image_url: res.image_url,
                     foodItems: res.foodItems,
                 },
@@ -40,6 +41,28 @@ const BottomNavBar = () => {
         } catch (err) {
             setisLoading(false);
             navigate('/dashboard');
+            setcurrentScreen(SCREENS.DASHBOARD);
+        }
+    };
+
+    const correctHighlighter = () => {
+        alert(location.pathname);
+        switch (location.pathname) {
+            case '/dashboard':
+                setcurrentScreen(SCREENS.DASHBOARD);
+                return;
+            case '/reports':
+                setcurrentScreen(SCREENS.REPORTS);
+                return;
+            case '/profile':
+                setcurrentScreen(SCREENS.PROFILE);
+                return;
+            case '/blogs':
+                setcurrentScreen(SCREENS.BLOGS);
+                return;
+            default:
+                setcurrentScreen(SCREENS.DASHBOARD);
+                navigate('/dashboard');
         }
     };
     return (
@@ -100,7 +123,7 @@ const BottomNavBar = () => {
                                 onChange={(e) => {
                                     if (e.target.files.length > 0)
                                         handleSelectImage(e.target.files[0]);
-                                    else navigate('/dashboard');
+                                    else correctHighlighter();
                                 }}
                             />
 

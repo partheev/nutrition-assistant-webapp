@@ -1,3 +1,4 @@
+import datetime
 from flask import Blueprint, request, current_app
 import uuid
 import os
@@ -182,7 +183,38 @@ def lastWeek(current_user):
     }
 
 
-@food.get('/consumption-on')
+@food.post('/consumption-on')
 @token_required
 def consumptionOn(current_user):
-    pass
+    try:
+
+        data = request.json
+        consumed_on = data.get('consumed_on', None)
+        if consumed_on is None:
+            return{
+                'msg': 'Invalid data. [consumed_on] field missing'
+            }, 400
+
+        stmt = ibm_db.prepare(
+            conn, 'SELECT * FROM CONSUMED_FOODS WHERE date(consumed_on) = (?) and user_id = ?')
+        ibm_db.bind_param(stmt, 1, str(datetime.date.fromtimestamp(
+            int(consumed_on)/1000.0)))
+        ibm_db.bind_param(stmt, 2, current_user.get('ID'))
+        ibm_db.execute(stmt)
+
+        foods = []
+
+        while True:
+            food = ibm_db.fetch_assoc(stmt)
+            if food is False:
+                break
+            foods.append(food)
+
+        return {
+            'food_items': foods
+        }
+    except Exception as e:
+        return{
+            'msg': 'Something went wrong',
+            'error': str(e)
+        }, 500
