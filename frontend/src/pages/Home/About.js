@@ -17,17 +17,6 @@ const imgVariants = {
     },
   },
 }
-const textVariants = {
-  // offscreen: {
-  //   scale: 0,
-  // },
-  onscreen: {
-    // scale: 1,
-    transition: {
-      type: 'spring',
-    },
-  },
-}
 
 const About = () => {
   return (
@@ -51,25 +40,17 @@ const About = () => {
             alt=""
           ></motion.img>
         </motion.div>
-        <motion.h1
-          variants={textVariants}
-          className={styles.text}
-          style={{ width: '20rem' }}
-        >
+        <motion.div className={styles.text}>
           Relax, We will take care of your healthy DIET
-        </motion.h1>
+        </motion.div>
       </div>
       <div
         className={`${styles.why} ${styles.rev}`}
         style={{ backgroundColor: '#f6f6f6' }}
       >
-        <motion.h1
-          className={styles.text}
-          variants={textVariants}
-          style={{ width: '20rem' }}
-        >
+        <motion.div className={styles.text}>
           Just take a snap, And know what you are taking
-        </motion.h1>
+        </motion.div>
 
         <motion.div
           initial="offscreen"
@@ -103,14 +84,10 @@ const About = () => {
             alt=""
           ></motion.img>
         </motion.div>
-        <motion.h1
-          variants={textVariants}
-          className={styles.text}
-          style={{ width: '20rem' }}
-        >
+        <motion.div className={styles.text}>
           We let you track and compare your diet over past week by smooth
           analytics
-        </motion.h1>
+        </motion.div>
       </div>
     </div>
   )
