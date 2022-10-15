@@ -12,6 +12,25 @@ import { useSnackbar } from 'notistack';
 import { formatAMPM } from '../../utils/utils';
 import { FullPageLoading } from '../../Components/LoadingSpinner';
 import { AppContext } from '../../Context/AppContext';
+import CloseIcon from '@mui/icons-material/Close';
+import PlayCircleFilledIcon from '@mui/icons-material/PlayCircleFilled';
+import Joyride, { CallBackProps, STATUS, Step } from 'react-joyride';
+import { motion } from 'framer-motion';
+
+const tourMotion = {
+    offscreen: {
+        x: -300,
+    },
+    onscreen: {
+        x: 0,
+        scale: 1,
+
+        transition: {
+            type: 'spring',
+            duration: 1,
+        },
+    },
+};
 
 const ProtienLinearProgress = styled(LinearProgress)(({ theme }) => ({
     height: 10,
@@ -75,18 +94,66 @@ function calorieProgressColor({ value, seriesIndex, w }) {
     }
 }
 const Dashboard = () => {
-    const { enqueueSnackbar } = useSnackbar();
-    const [isLoading, setisLoading] = useState(false);
     const { nutrients, setnutrients, todayFoodItems } = useContext(AppContext);
-
+    const [tourRun, settourRun] = useState(false);
+    const { isLoading, isTourTaken, setisTourTaken } = useContext(AppContext);
     const todaysCaloriesPercent =
         nutrients.calorie > MAX_CALORIES
             ? 100
             : (nutrients.calorie / MAX_CALORIES) * 100;
     const CALORIES = nutrients.calorie;
 
+    const steps = [
+        {
+            target: '.calorieBar',
+            content: "Check your today's calories in this progress gauge",
+            disableBeacon: true,
+        },
+        {
+            target: '.nutrientBars',
+            content:
+                'Know the nutrient quantities you are taking and stay in limit',
+            disableBeacon: true,
+        },
+        {
+            target: '.todaysFood',
+            content: 'Find what you have taken today',
+            disableBeacon: true,
+        },
+        {
+            target: '#reports',
+            content:
+                'Know and Analyse your food and calorie consumption of past week',
+            disableBeacon: true,
+        },
+        {
+            target: '#scan',
+            content:
+                'Scan your food and know the facts and add it to your dairy',
+            disableBeacon: true,
+        },
+        {
+            target: '#blogs',
+            content:
+                'Learn about staying healthy, Follow dietary meal plans provided by experts',
+            disableBeacon: true,
+        },
+    ];
+
+    const handleTour = (data) => {
+        const { status } = data;
+        const finishedStatuses = [STATUS.FINISHED, STATUS.SKIPPED];
+
+        if (finishedStatuses.includes(status)) {
+            settourRun(false);
+        }
+    };
+
     return (
-        <div
+        <motion.div
+            initial='offscreen'
+            whileInView='onscreen'
+            viewport={{ once: true }}
             style={{
                 background: 'var(--backgroundColor)',
                 paddingBottom: '6rem',
@@ -110,74 +177,171 @@ const Dashboard = () => {
                     Dashboard
                 </h1>
             </div>
-            <Chart
-                type='radialBar'
-                series={[todaysCaloriesPercent]}
-                height={400}
-                options={{
-                    labels: ['calories'],
-                    CALORIES: CALORIES,
-                    plotOptions: {
-                        radialBar: {
-                            hollow: {
-                                margin: 0,
-                                size: '70%',
-                                background: '#F9F9F9',
-                                boxShadow:
-                                    '0 4px 8px 0 rgba(0, 0, 0, 0.18), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
-                                dropShadow: {
-                                    enabled: true,
-                                    top: 0,
-                                    left: 0,
-                                    blur: 4,
-                                    opacity: 0.24,
+
+            <motion.div
+                variants={tourMotion}
+                style={
+                    !isTourTaken && !isLoading
+                        ? {
+                              backgroundColor: '#fff',
+                              padding: '0.3rem',
+                              display: 'inline-block',
+                              border: '0px solid var(--themecolor)',
+                              borderRadius: '10px',
+                              position: 'absolute',
+                              zIndex: 100,
+                              top: 0,
+                              left: 0,
+                              right: 0,
+                              bottom: 0,
+                              margin: 'auto',
+                              width: '150px',
+                              height: '120px',
+                              boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.6)',
+                          }
+                        : { display: 'none' }
+                }
+            >
+                {!isLoading && (
+                    <>
+                        <div
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'flex-end',
+                            }}
+                        >
+                            <button
+                                style={{
+                                    backgroundColor: 'transparent',
+                                    border: 'transparent',
+                                }}
+                                onClick={(e) => setisTourTaken(true)}
+                            >
+                                <CloseIcon />
+                            </button>
+                        </div>
+                        <div style={{ padding: '0 18px 10px 18px' }}>
+                            <div style={{ fontSize: '18px' }}>Take a tour</div>
+
+                            <button
+                                style={{
+                                    padding: '4px 10px',
+                                    width: '100%',
+                                    borderRadius: '6px',
+                                    fontSize: '20px',
+                                    color: 'white',
+                                    background: 'var(--themecolor)',
+                                    border: '1px solid var(--themecolor)',
+                                    marginTop: '5px',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                }}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    settourRun(true);
+                                    setisTourTaken(true);
+                                }}
+                            >
+                                <span style={{ marginRight: '5px' }}>
+                                    start
+                                </span>{' '}
+                                <PlayCircleFilledIcon />
+                            </button>
+                        </div>
+                    </>
+                )}
+            </motion.div>
+
+            <Joyride
+                callback={handleTour}
+                continuous
+                showProgress
+                showSkipButton
+                disableScrolling={true}
+                steps={steps}
+                scrollToFirstStep
+                run={tourRun}
+                spotlightClicks={false}
+                styles={{
+                    options: {
+                        zIndex: 10000,
+                        primaryColor: 'var(--themecolor)',
+                    },
+                }}
+            />
+            <div>
+                <Chart
+                    className='calorieBar'
+                    type='radialBar'
+                    series={[todaysCaloriesPercent]}
+                    height={400}
+                    options={{
+                        labels: ['calories'],
+                        CALORIES: CALORIES,
+                        plotOptions: {
+                            radialBar: {
+                                hollow: {
+                                    margin: 0,
+                                    size: '70%',
+                                    background: '#F9F9F9',
+                                    boxShadow:
+                                        '0 4px 8px 0 rgba(0, 0, 0, 0.18), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+                                    dropShadow: {
+                                        enabled: true,
+                                        top: 0,
+                                        left: 0,
+                                        blur: 4,
+                                        opacity: 0.24,
+                                    },
                                 },
-                            },
-                            track: {
-                                background: '#fff',
-                                dropShadow: {
-                                    enabled: true,
-                                    top: 2,
-                                    left: 0,
-                                    blur: 4,
-                                    opacity: 0.5,
+                                track: {
+                                    background: '#fff',
+                                    dropShadow: {
+                                        enabled: true,
+                                        top: 2,
+                                        left: 0,
+                                        blur: 4,
+                                        opacity: 0.5,
+                                    },
                                 },
-                            },
-                            dataLabels: {
-                                name: {
-                                    color: calorieProgressColor({
-                                        value: todaysCaloriesPercent,
-                                    }),
-                                    fontSize: '1.5rem',
-                                    offsetY: 40,
-                                    fontWeight: 300,
-                                },
-                                value: {
-                                    color: calorieProgressColor({
-                                        value: todaysCaloriesPercent,
-                                    }),
-                                    fontSize: '4.5rem',
-                                    fontWeight: 700,
-                                    margin: '1rem',
-                                    offsetY: -10,
-                                    show: true,
-                                    formatter: (value) => {
-                                        return CALORIES;
+                                dataLabels: {
+                                    name: {
+                                        color: calorieProgressColor({
+                                            value: todaysCaloriesPercent,
+                                        }),
+                                        fontSize: '1.5rem',
+                                        offsetY: 40,
+                                        fontWeight: 300,
+                                    },
+                                    value: {
+                                        color: calorieProgressColor({
+                                            value: todaysCaloriesPercent,
+                                        }),
+                                        fontSize: '4.5rem',
+                                        fontWeight: 700,
+                                        margin: '1rem',
+                                        offsetY: -10,
+                                        show: true,
+                                        formatter: (value) => {
+                                            return CALORIES;
+                                        },
                                     },
                                 },
                             },
                         },
-                    },
-                    fill: {
-                        colors: [calorieProgressColor],
-                    },
-                    stroke: {
-                        lineCap: 'round',
-                    },
-                }}
-            ></Chart>
+                        fill: {
+                            colors: [calorieProgressColor],
+                        },
+                        stroke: {
+                            lineCap: 'round',
+                        },
+                    }}
+                ></Chart>
+            </div>
             <Container maxWidth='sm'>
                 <Box
+                    className='nutrientBars'
                     sx={{
                         mx: '1rem',
                         p: '1rem',
@@ -204,7 +368,7 @@ const Dashboard = () => {
                             }}
                         ></div>
                         <p style={{ marginLeft: '10px' }}>
-                            Protien{' '}
+                            Protein{' '}
                             <span>
                                 [{nutrients.protiens}g / {nutrients.maxprotiens}
                                 g]
@@ -319,39 +483,41 @@ const Dashboard = () => {
                         }
                     />
                 </Box>
-                <h2 style={{ marginTop: '1.5rem', marginBottom: '1rem' }}>
-                    Today's Food
-                </h2>
-                {todayFoodItems.length === 0 && (
-                    <Alert severity='info'>
-                        No foods consumed today. Click on camera icon to capture
-                        your food.
-                    </Alert>
-                )}
-                <Grid columnSpacing={'1rem'} container>
-                    {todayFoodItems.map((item, idx) => {
-                        return (
-                            <Grid key={idx} item sm={6} xs={12}>
-                                <FoodCard
-                                    key={idx}
-                                    calories={item.CALORIE.toFixed(2)}
-                                    carbohydrates={item.CARBOHYDRATES.toFixed(
-                                        2
-                                    )}
-                                    fats={item.FAT.toFixed(2)}
-                                    image_url={item.IMAGE}
-                                    proteins={item.PROTEINS.toFixed(2)}
-                                    time={formatAMPM(
-                                        new Date(item.CONSUMED_ON)
-                                    )}
-                                    calcium={item.CALCIUM.toFixed(2)}
-                                />
-                            </Grid>
-                        );
-                    })}
-                </Grid>
+                <div className='todaysFood'>
+                    <h2 style={{ marginTop: '1.5rem', marginBottom: '1rem' }}>
+                        Today's Food
+                    </h2>
+                    {todayFoodItems.length === 0 && (
+                        <Alert severity='info'>
+                            No foods consumed today. Click on camera icon to
+                            capture your food.
+                        </Alert>
+                    )}
+                    <Grid columnSpacing={'1rem'} container>
+                        {todayFoodItems.map((item, idx) => {
+                            return (
+                                <Grid key={idx} item sm={6} xs={12}>
+                                    <FoodCard
+                                        key={item.ID}
+                                        calories={item.CALORIE.toFixed(2)}
+                                        carbohydrates={item.CARBOHYDRATES.toFixed(
+                                            2
+                                        )}
+                                        fats={item.FAT.toFixed(2)}
+                                        image_url={item.IMAGE}
+                                        proteins={item.PROTEINS.toFixed(2)}
+                                        time={formatAMPM(
+                                            new Date(item.CONSUMED_ON)
+                                        )}
+                                        calcium={item.CALCIUM.toFixed(2)}
+                                    />
+                                </Grid>
+                            );
+                        })}
+                    </Grid>
+                </div>
             </Container>
-        </div>
+        </motion.div>
     );
 };
 

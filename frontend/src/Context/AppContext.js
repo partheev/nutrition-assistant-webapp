@@ -5,6 +5,8 @@ import { FullPageLoading } from '../Components/LoadingSpinner';
 import { API } from '../services/apis';
 
 export const AppContext = createContext({
+    isTourTaken: Boolean(),
+    setisTourTaken: () => {},
     weekData: [],
     fetchWeekData: () => {},
     fetchTodaysConsumption: () => {},
@@ -12,16 +14,19 @@ export const AppContext = createContext({
     setnutrients: () => {},
     todayFoodItems: [],
     userInfo: {},
+    isLoading: Boolean(),
     maxCalories: Number(),
     setmaxCalories: () => {},
     setuserInfo: () => {},
     handleLogout: () => {},
+    setisLoading: () => {},
 });
 
 export const AppContextProvider = ({ children }) => {
     const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate();
     const [isLoading, setisLoading] = useState(false);
+    const [isTourTaken, setisTourTaken] = useState(false);
 
     const [userInfo, setuserInfo] = useState({});
     const [weekData, setweekData] = useState([]);
@@ -126,6 +131,9 @@ export const AppContextProvider = ({ children }) => {
     return (
         <AppContext.Provider
             value={{
+                isTourTaken,
+                setisTourTaken,
+                isLoading,
                 weekData,
                 fetchWeekData,
                 nutrients,
@@ -137,6 +145,7 @@ export const AppContextProvider = ({ children }) => {
                 setmaxCalories,
                 maxCalories,
                 handleLogout,
+                setisLoading,
             }}
         >
             <FullPageLoading isLoading={isLoading} />

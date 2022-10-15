@@ -196,10 +196,11 @@ def consumptionOn(current_user):
             }, 400
 
         stmt = ibm_db.prepare(
-            conn, 'SELECT * FROM CONSUMED_FOODS WHERE date(consumed_on) = (?) and user_id = ?')
+            conn, 'SELECT * FROM CONSUMED_FOODS WHERE date(consumed_on) = (?) and user_id = ? and IS_INTAKE = ?')
         ibm_db.bind_param(stmt, 1, str(datetime.date.fromtimestamp(
             int(consumed_on)/1000.0)))
         ibm_db.bind_param(stmt, 2, current_user.get('ID'))
+        ibm_db.bind_param(stmt, 3, True)
         ibm_db.execute(stmt)
 
         foods = []

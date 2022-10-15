@@ -90,6 +90,7 @@ const BottomNavBar = () => {
                         </li>
 
                         <li
+                            id='reports'
                             className={
                                 currentScreen === SCREENS.REPORTS
                                     ? styles.active
@@ -105,6 +106,7 @@ const BottomNavBar = () => {
                             </Link>
                         </li>
                         <li
+                            id='scan'
                             className={
                                 currentScreen === SCREENS.CAPTURE
                                     ? styles.active
@@ -135,6 +137,7 @@ const BottomNavBar = () => {
                             </Link>
                         </li>
                         <li
+                            id='blogs'
                             className={
                                 currentScreen === SCREENS.BLOGS
                                     ? styles.active

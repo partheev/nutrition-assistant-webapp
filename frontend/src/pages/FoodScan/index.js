@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import CameraswitchIcon from '@mui/icons-material/Cameraswitch';
@@ -10,6 +10,7 @@ import { Box, Container, Divider } from '@mui/material';
 import { API } from '../../services/apis';
 import { useSnackbar } from 'notistack';
 import { FullPageLoading } from '../../Components/LoadingSpinner';
+const UNITS = ['gm', 'ounce', 'ml', 'pieces', 'slices', 'cup', 'tbsp'];
 const ScannedImg = () => {
     const { enqueueSnackbar } = useSnackbar();
     const { state } = useLocation();
@@ -40,7 +41,19 @@ const ScannedImg = () => {
             setselectedItems(
                 selectedItems.filter((item) => item.id !== foodItem.id)
             );
-        } else setselectedItems([...selectedItems, foodItem]);
+        } else
+            setselectedItems([
+                ...selectedItems,
+                { ...foodItem, qty: 50, unit: 'gm' },
+            ]);
+    };
+    const handleModifyItem = ({ value, id, field }) => {
+        setselectedItems((prevState) => {
+            const items = [...prevState];
+            const idx = items.findIndex((item) => item.id === id);
+            items[idx] = { ...items[idx], [field]: value };
+            return items;
+        });
     };
 
     const handleNext = async () => {
@@ -49,12 +62,15 @@ const ScannedImg = () => {
             const res = await API.foodNutritionDetails({
                 image_url: image,
                 food_item: selectedItems.reduce(
-                    (prev, curr) => prev + curr.name + ', ',
+                    (prev, curr, idx, arr) =>
+                        prev +
+                        curr.name +
+                        ` ${curr.qty} ${curr.unit}` +
+                        (idx === arr.length - 1 ? '' : ' and '),
                     ''
                 ),
             });
             setscreen(true);
-            console.log(res);
             setnutrientsList(res.nutrients);
             setconsumed_food_id(res.consumed_food_id);
         } catch (err) {
@@ -75,6 +91,7 @@ const ScannedImg = () => {
         }
     }, []);
 
+    console.log(selectedItems);
     return (
         <div
             maxWidth='lg'
@@ -217,13 +234,12 @@ const ScannedImg = () => {
                                 >
                                     <tbody>
                                         {foodItems.map((item, idx, arr) => {
-                                            const isSelected = Boolean(
+                                            const selectedItem =
                                                 selectedItems.find(
                                                     (x) => x.id === item.id
-                                                )
-                                            );
+                                                );
                                             return (
-                                                <>
+                                                <Fragment key={item.id}>
                                                     <tr>
                                                         <td
                                                             style={{
@@ -246,7 +262,9 @@ const ScannedImg = () => {
                                                             >
                                                                 {item.name}
                                                             </span>
-                                                            {isSelected ? (
+                                                            {Boolean(
+                                                                selectedItem
+                                                            ) ? (
                                                                 <span>
                                                                     <span
                                                                         style={{
@@ -290,10 +308,23 @@ const ScannedImg = () => {
                                                                             ) => {
                                                                                 event.stopPropagation();
                                                                             }}
-                                                                            type='number'
-                                                                            defaultValue={
-                                                                                50
+                                                                            onChange={(
+                                                                                e
+                                                                            ) =>
+                                                                                handleModifyItem(
+                                                                                    {
+                                                                                        value: e
+                                                                                            .target
+                                                                                            .value,
+                                                                                        id: item.id,
+                                                                                        field: 'qty',
+                                                                                    }
+                                                                                )
                                                                             }
+                                                                            type='number'
+                                                                            value={String(
+                                                                                selectedItem.qty
+                                                                            )}
                                                                         />
                                                                         <select
                                                                             style={{
@@ -302,67 +333,49 @@ const ScannedImg = () => {
                                                                                 border: '1px solid var(--lightOrange)',
                                                                             }}
                                                                             onClick={(
-                                                                                event
+                                                                                e
                                                                             ) => {
-                                                                                event.stopPropagation();
+                                                                                e.stopPropagation();
                                                                             }}
+                                                                            value={
+                                                                                selectedItem.unit
+                                                                            }
+                                                                            onChange={(
+                                                                                e
+                                                                            ) =>
+                                                                                handleModifyItem(
+                                                                                    {
+                                                                                        value: e
+                                                                                            .target
+                                                                                            .value,
+                                                                                        id: item.id,
+                                                                                        field: 'unit',
+                                                                                    }
+                                                                                )
+                                                                            }
                                                                         >
-                                                                            <option
-                                                                                style={{
-                                                                                    backgroundColor:
-                                                                                        'var(--backgroundColor)',
-                                                                                }}
-                                                                            >
-                                                                                gm
-                                                                            </option>
-                                                                            <option
-                                                                                style={{
-                                                                                    backgroundColor:
-                                                                                        'var(--backgroundColor)',
-                                                                                }}
-                                                                            >
-                                                                                ounce
-                                                                            </option>
-                                                                            <option
-                                                                                style={{
-                                                                                    backgroundColor:
-                                                                                        'var(--backgroundColor)',
-                                                                                }}
-                                                                            >
-                                                                                ml
-                                                                            </option>
-                                                                            <option
-                                                                                style={{
-                                                                                    backgroundColor:
-                                                                                        'var(--backgroundColor)',
-                                                                                }}
-                                                                            >
-                                                                                pieces
-                                                                            </option>
-                                                                            <option
-                                                                                style={{
-                                                                                    backgroundColor:
-                                                                                        'var(--backgroundColor)',
-                                                                                }}
-                                                                            >
-                                                                                slices
-                                                                            </option>
-                                                                            <option
-                                                                                style={{
-                                                                                    backgroundColor:
-                                                                                        'var(--backgroundColor)',
-                                                                                }}
-                                                                            >
-                                                                                cup
-                                                                            </option>
-                                                                            <option
-                                                                                style={{
-                                                                                    backgroundColor:
-                                                                                        'var(--backgroundColor)',
-                                                                                }}
-                                                                            >
-                                                                                tbsp
-                                                                            </option>
+                                                                            {UNITS.map(
+                                                                                (
+                                                                                    unit
+                                                                                ) => (
+                                                                                    <option
+                                                                                        value={
+                                                                                            unit
+                                                                                        }
+                                                                                        key={
+                                                                                            unit
+                                                                                        }
+                                                                                        style={{
+                                                                                            backgroundColor:
+                                                                                                'var(--backgroundColor)',
+                                                                                        }}
+                                                                                    >
+                                                                                        {
+                                                                                            unit
+                                                                                        }
+                                                                                    </option>
+                                                                                )
+                                                                            )}
                                                                         </select>
                                                                     </span>
                                                                 </span>
@@ -374,7 +387,7 @@ const ScannedImg = () => {
                                                     {idx !== arr.length - 1 && (
                                                         <Divider />
                                                     )}
-                                                </>
+                                                </Fragment>
                                             );
                                         })}
                                     </tbody>

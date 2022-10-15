@@ -13,7 +13,7 @@ const imgVariants = {
     opacity: 1,
     transition: {
       type: 'spring',
-      duration: 1.4,
+      duration: 1,
     },
   },
 }
