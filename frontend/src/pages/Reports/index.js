@@ -1,15 +1,29 @@
-import React, { useContext } from 'react';
+import { Alert, Container } from '@mui/material';
+import React, { useContext, useState } from 'react';
 import Chart from 'react-apexcharts';
 import DailyReport from '../../Components/DailyReport';
 import { AppContext } from '../../Context/AppContext';
+import { API } from '../../services/apis';
 import { getChartData } from '../../utils/utils';
 
 const Reports = () => {
-    const { weekData } = useContext(AppContext);
+    const { weekData, setisLoading } = useContext(AppContext);
     const [categories, weekCalories] = getChartData(weekData);
-
-    const getDate = (idx) => {
-        console.log(idx);
+    const [foodItems, setfoodItems] = useState(null);
+    const [selectedDate, setselectedDate] = useState(null);
+    const getDate = async (idx) => {
+        const selectDate = weekData.find(
+            (week) => week.DAY === categories[idx]
+        );
+        if (!selectDate) {
+            return;
+        }
+        const selectedDate = new Date(selectDate.CONSUMED_ON).getTime();
+        setselectedDate(new Date(selectDate.CONSUMED_ON));
+        setisLoading(true);
+        const res = await API.consumptionOn(selectedDate);
+        setisLoading(false);
+        setfoodItems(res.food_items);
     };
 
     return (
@@ -17,6 +31,7 @@ const Reports = () => {
             style={{
                 background: 'var(--backgroundColor)',
                 paddingBottom: '6rem',
+                minHeight: '100vh',
             }}
         >
             <div
@@ -37,60 +52,71 @@ const Reports = () => {
                     Weekly health
                 </h1>
             </div>
-            <div style={{ padding: '0 2rem' }}>
-                <Chart
-                    type='bar'
-                    series={[
-                        {
-                            name: 'calories',
-                            color: '#F0A500',
-                            data: weekCalories,
-                        },
-                    ]}
-                    height={400}
-                    options={{
-                        xaxis: {
-                            categories: categories,
-                        },
-                        yaxis: {
-                            title: {
-                                text: 'calories',
+            <Container maxWidth='md'>
+                <div style={{ padding: '0 2rem' }}>
+                    <Chart
+                        type='bar'
+                        series={[
+                            {
+                                name: 'calories',
+                                color: '#F0A500',
+                                data: weekCalories,
                             },
-                        },
-                        grid: {
-                            show: false,
-                        },
-                        plotOptions: {
-                            bar: {
-                                horizontal: false,
-                                columnWidth: '30%',
-                                borderRadius: 8,
+                        ]}
+                        height={400}
+                        options={{
+                            xaxis: {
+                                categories: categories,
                             },
-                            colors: {
-                                backgroundBarRadius: 20,
-                                backgroundBarColors: ['#fff', 'red'],
-                            },
-                        },
-                        dataLabels: {
-                            enabled: false,
-                        },
-                        chart: {
-                            events: {
-                                dataPointSelection: (
-                                    event,
-                                    chartContext,
-                                    config
-                                ) => {
-                                    getDate(config.dataPointIndex);
+                            yaxis: {
+                                title: {
+                                    text: 'calories',
                                 },
                             },
-                        },
-                    }}
-                ></Chart>
-                <div>
-                    <DailyReport />
+                            grid: {
+                                show: false,
+                            },
+                            plotOptions: {
+                                bar: {
+                                    horizontal: false,
+                                    columnWidth: '30%',
+                                    borderRadius: 8,
+                                },
+                                colors: {
+                                    backgroundBarRadius: 20,
+                                    backgroundBarColors: ['#fff', 'red'],
+                                },
+                            },
+                            dataLabels: {
+                                enabled: false,
+                            },
+                            chart: {
+                                events: {
+                                    dataPointSelection: (
+                                        event,
+                                        chartContext,
+                                        config
+                                    ) => {
+                                        getDate(config.dataPointIndex);
+                                    },
+                                },
+                            },
+                        }}
+                    ></Chart>
+                    {foodItems && selectedDate ? (
+                        <div>
+                            <DailyReport
+                                selectedDate={selectedDate}
+                                foodItems={foodItems}
+                            />
+                        </div>
+                    ) : (
+                        <Alert severity='info'>
+                            Select above bars to see consumed food items
+                        </Alert>
+                    )}
                 </div>
-            </div>
+            </Container>
         </div>
     );
 };

@@ -11,8 +11,12 @@ import '../../styles/auth.modules.css';
 const Signin = () => {
     const navigate = useNavigate();
     const { enqueueSnackbar } = useSnackbar();
-    const { fetchTodaysConsumption, fetchWeekData, setuserInfo } =
-        useContext(AppContext);
+    const {
+        fetchTodaysConsumption,
+        setmaxCalories,
+        fetchWeekData,
+        setuserInfo,
+    } = useContext(AppContext);
     const [state, setstate] = useState({
         email: '',
         password: '',
@@ -30,6 +34,7 @@ const Signin = () => {
             localStorage.setItem('userInfo', JSON.stringify(res.user));
             if (res.user.IS_LOGIN_PROCESS_COMPLETE) {
                 setuserInfo(res.user);
+                setmaxCalories(res.maxCalories);
                 navigate('/dashboard');
                 fetchTodaysConsumption();
                 fetchWeekData();
@@ -54,6 +59,7 @@ const Signin = () => {
 
             if (res.user.IS_LOGIN_PROCESS_COMPLETE) {
                 setuserInfo(res.user);
+                setmaxCalories(res.maxCalories);
                 navigate('/dashboard');
                 fetchTodaysConsumption();
                 fetchWeekData();

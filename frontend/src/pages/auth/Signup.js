@@ -1,8 +1,9 @@
 import { Box } from '@mui/material';
 import { Container } from '@mui/system';
 import { useSnackbar } from 'notistack';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AppContext } from '../../Context/AppContext';
 import { API } from '../../services/apis';
 import { googleOauthPopup } from '../../services/firebase';
 import '../../styles/auth.modules.css';
@@ -10,6 +11,12 @@ import '../../styles/auth.modules.css';
 const Signup = () => {
     const navigate = useNavigate();
     const { enqueueSnackbar } = useSnackbar();
+    const {
+        fetchTodaysConsumption,
+        setmaxCalories,
+        fetchWeekData,
+        setuserInfo,
+    } = useContext(AppContext);
     const [state, setstate] = useState({
         username: '',
         email: '',
@@ -26,7 +33,12 @@ const Signup = () => {
             localStorage.setItem('userInfo', JSON.stringify(res.user));
 
             if (res.user.IS_LOGIN_PROCESS_COMPLETE) {
+                setmaxCalories(res.maxCalories);
+
+                setuserInfo(res.user);
                 navigate('/dashboard');
+                fetchTodaysConsumption();
+                fetchWeekData();
             } else {
                 navigate('/userInitialForm');
             }
@@ -37,6 +49,16 @@ const Signup = () => {
     };
 
     const handleSignUp = async () => {
+        if (
+            state.email.trim() &&
+            state.password.trim() &&
+            state.username.trim()
+        ) {
+            enqueueSnackbar('Please fill all details', {
+                variant: 'error',
+            });
+            return;
+        }
         if (state.password !== state.confirmPassword) {
             enqueueSnackbar("Passwords doesn't match", {
                 variant: 'error',
