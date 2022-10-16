@@ -83,9 +83,9 @@ const ScannedImg = () => {
                     .reduce(
                         (prev, curr, idx, arr) =>
                             prev +
+                            `${curr.qty} ${curr.unit} ` +
                             curr.name +
-                            ` ${curr.qty} ${curr.unit}` +
-                            (idx === arr.length - 1 ? '' : ' and '),
+                            (idx === arr.length - 1 ? '' : ', '),
                         ''
                     )
                     .substring(0, 90),
@@ -128,55 +128,68 @@ const ScannedImg = () => {
                         <div>
                             <div
                                 style={{
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
                                     paddingTop: '1rem',
-                                    margin: '0px 7px',
+                                    background: 'var(--backgroundColor)',
+                                    position: 'fixed',
+                                    width: '100%',
+                                    padding: '0.8rem 0.5rem 0.5rem 0.5rem',
+                                    top: 0,
+                                    left: 0,
                                 }}
                             >
-                                <button
-                                    style={{
-                                        display: 'block',
-                                        background: 'var(--backgroundColor)',
-                                        border: '0',
-                                    }}
-                                    onClick={(e) => {
-                                        navigate('/dashboard');
-                                    }}
-                                >
-                                    {' '}
-                                    <KeyboardBackspaceIcon
-                                        sx={{ fontSize: '35px' }}
-                                    />
-                                </button>
+                                <Container maxWidth='md'>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                        }}
+                                    >
+                                        <button
+                                            style={{
+                                                display: 'block',
+                                                background:
+                                                    'var(--backgroundColor)',
+                                                border: '0',
+                                            }}
+                                            onClick={(e) => {
+                                                navigate('/dashboard');
+                                            }}
+                                        >
+                                            {' '}
+                                            <KeyboardBackspaceIcon
+                                                sx={{ fontSize: '35px' }}
+                                            />
+                                        </button>
 
-                                <button
-                                    style={{
-                                        display: 'flex',
-                                        border: '0',
-                                        padding: '8px',
-                                        background: 'var(--themecolor)',
-                                        color: '#fff',
-                                        margin: '3px 8px 0 0',
-                                        borderRadius: '4px',
-                                        alignItems: 'center',
-                                    }}
-                                    onClick={handleNext}
-                                >
-                                    {' '}
-                                    <span style={{ fontSize: '16px' }}>
-                                        Next
-                                    </span>{' '}
-                                    <ArrowForwardIos
-                                        sx={{ fontSize: '16px' }}
-                                    />
-                                </button>
+                                        <button
+                                            style={{
+                                                display: 'flex',
+                                                border: '0',
+                                                padding: '8px',
+                                                background: 'var(--themecolor)',
+                                                color: '#fff',
+                                                margin: '3px 8px 0 0',
+                                                borderRadius: '4px',
+                                                alignItems: 'center',
+                                            }}
+                                            onClick={handleNext}
+                                        >
+                                            {' '}
+                                            <span style={{ fontSize: '16px' }}>
+                                                Next
+                                            </span>{' '}
+                                            <ArrowForwardIos
+                                                sx={{ fontSize: '16px' }}
+                                            />
+                                        </button>
+                                    </div>
+                                </Container>
                             </div>
                             <div
                                 style={{
                                     display: 'flex',
                                     justifyContent: 'center',
-                                    marginTop: '1rem',
+                                    paddingTop: '4.3rem',
                                 }}
                             >
                                 <img
