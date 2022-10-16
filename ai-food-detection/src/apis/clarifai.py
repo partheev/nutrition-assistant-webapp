@@ -26,11 +26,15 @@ def detectFood():
                 }
             ]
         }, headers={'Authorization': 'Key '+str(os.environ.get('CLARIFAI_API_KEY'))})
+
         foodItems = foodResponse.json()['outputs'][0]['data']['concepts']
         return {
-            'foodItems': foodItems
+            'foodItems': foodItems,
+            'res': foodResponse.json()
         }
-    except:
+    except Exception as e:
         return {
-            'msg': 'Something went wrong. Try again'
+            'msg': 'Something went wrong. Try again',
+            'error': str(e),
+            'res': foodResponse.json()
         }
