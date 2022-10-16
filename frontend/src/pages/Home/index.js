@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import About from './About'
 import styles from '../../styles/home.module.css'
 import Services from './Services'
+import Footer from './Footer'
 
 export default function Home() {
   const navigate = useNavigate()
@@ -107,6 +108,7 @@ export default function Home() {
       <div style={{ height: '10vh' }}></div>
       <About />
       <Services />
+      <Footer />
     </div>
   )
 }

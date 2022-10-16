@@ -37,6 +37,9 @@
   .title {
     width: 14rem;
   }
+  .serviceimg {
+    width: 16rem;
+  }
 }
 @media only screen and (max-width: 670px) {
   .why {
@@ -51,8 +54,8 @@
   }
   .text {
     width: 18rem;
-    margin-top: 30px;
-    font-size: 26px;
+    margin-top: 20px;
+    font-size: 24px;
     font-weight: 600;
     text-align: center;
   }
@@ -72,6 +75,7 @@
   }
   .servicetext {
     width: 80%;
+    text-align: justify;
   }
   .homebtns {
     padding: 8px 10px;
@@ -81,7 +85,11 @@
   .title {
     width: 10rem;
   }
-}
-.serviceimg {
-  width: 22rem;
+  .serviceTitle {
+    margin-top: 20px;
+    text-align: center;
+  }
+  .serviceimg {
+    width: 14rem;
+  }
 }
