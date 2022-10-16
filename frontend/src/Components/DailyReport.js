@@ -49,7 +49,7 @@ const DailyReport = ({ foodItems, selectedDate }) => {
                     Calories
                 </span>
             </div>
-            <Grid container sx={{ marginTop: '2rem' }}>
+            <Grid container spacing={'2rem'} sx={{ marginTop: '2rem' }}>
                 {foodItems.map((item) => {
                     return (
                         <Grid item key={item.ID} xs={12} sm={6}>

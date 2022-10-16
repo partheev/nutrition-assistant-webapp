@@ -24,6 +24,10 @@ const Signin = () => {
 
     const [isLoading, setisLoading] = useState(false);
     const handleSignIn = async () => {
+        if (state.email.trim() === '' || state.password.trim() === '') {
+            enqueueSnackbar('Please fill all details', { variant: 'error' });
+            return;
+        }
         setisLoading(true);
         try {
             const res = await API.login({

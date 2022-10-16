@@ -30,9 +30,14 @@ const ScannedImg = () => {
             setimageBlob(URL.createObjectURL(foodImage));
             setfoodItems(res.foodItems);
         } catch (err) {
-            enqueueSnackbar(err.response.data.msg, {
-                variant: 'error',
-            });
+            if (err?.response?.data?.msg)
+                enqueueSnackbar(err.response.data.msg, {
+                    variant: 'error',
+                });
+            else
+                enqueueSnackbar('Something went wrong. Try again', {
+                    variant: 'error',
+                });
         }
     };
 
@@ -41,11 +46,17 @@ const ScannedImg = () => {
             setselectedItems(
                 selectedItems.filter((item) => item.id !== foodItem.id)
             );
-        } else
+        } else {
+            if (selectedItems.length === 3) {
+                enqueueSnackbar('Select 3 items only', { variant: 'error' });
+                return;
+            }
+
             setselectedItems([
                 ...selectedItems,
                 { ...foodItem, qty: 50, unit: 'gm' },
             ]);
+        }
     };
     const handleModifyItem = ({ value, id, field }) => {
         setselectedItems((prevState) => {
@@ -57,26 +68,40 @@ const ScannedImg = () => {
     };
 
     const handleNext = async () => {
+        if (selectedItems.length === 0) {
+            enqueueSnackbar('Please select atleast 1 item', {
+                variant: 'error',
+            });
+            return;
+        }
+
         setisLoading(true);
         try {
             const res = await API.foodNutritionDetails({
                 image_url: image,
-                food_item: selectedItems.reduce(
-                    (prev, curr, idx, arr) =>
-                        prev +
-                        curr.name +
-                        ` ${curr.qty} ${curr.unit}` +
-                        (idx === arr.length - 1 ? '' : ' and '),
-                    ''
-                ),
+                food_item: selectedItems
+                    .reduce(
+                        (prev, curr, idx, arr) =>
+                            prev +
+                            curr.name +
+                            ` ${curr.qty} ${curr.unit}` +
+                            (idx === arr.length - 1 ? '' : ' and '),
+                        ''
+                    )
+                    .substring(0, 90),
             });
             setscreen(true);
             setnutrientsList(res.nutrients);
             setconsumed_food_id(res.consumed_food_id);
         } catch (err) {
-            enqueueSnackbar(err.response.data.msg, {
-                variant: 'error',
-            });
+            if (err?.response?.data?.msg)
+                enqueueSnackbar(err.response.data.msg, {
+                    variant: 'error',
+                });
+            else
+                enqueueSnackbar('Something went wrong. Try again', {
+                    variant: 'error',
+                });
         }
         setisLoading(false);
     };
@@ -91,7 +116,6 @@ const ScannedImg = () => {
         }
     }, []);
 
-    console.log(selectedItems);
     return (
         <div
             maxWidth='lg'

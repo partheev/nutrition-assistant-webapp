@@ -64,18 +64,27 @@ def foodNutrients():
             'query': food
         }, headers={'x-app-id': nutritionix_appId, 'x-app-key': nutritionix_key, 'x-remote-user-id': '1'})
 
-        nutrientsList = nutritionResponse.json()['foods'][0]['full_nutrients']
+        nutrientsLists = nutritionResponse.json()['foods']
         requiredNutrients = []
-        for nutri in nutrientsList:
-            for req in NUTRI_ATTRI:
-                if req.get('attri') == nutri.get('attr_id'):
-                    requiredNutrients.append({
-                        'attri_id': nutri.get('attr_id'),
-                        'title': req.get('title'),
-                        'units': req.get('units'),
-                        'value': nutri.get('value')
-                    })
-                    break
+        for nutrientsList in nutrientsLists:
+            for nutri in nutrientsList['full_nutrients']:
+                for req in NUTRI_ATTRI:
+                    if req.get('attri') == nutri.get('attr_id'):
+                        found_index = next((index for (index, d) in enumerate(
+                            requiredNutrients) if d["attri_id"] == req.get('attri')), None)
+                        if found_index is not None:
+
+                            requiredNutrients[found_index]['value'] += nutri.get(
+                                'value')
+                            break
+                        else:
+                            requiredNutrients.append({
+                                'attri_id': nutri.get('attr_id'),
+                                'title': req.get('title'),
+                                'units': req.get('units'),
+                                'value': nutri.get('value')
+                            })
+                            break
 
         return {
             'nutrients': requiredNutrients

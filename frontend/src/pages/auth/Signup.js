@@ -50,9 +50,9 @@ const Signup = () => {
 
     const handleSignUp = async () => {
         if (
-            state.email.trim() &&
-            state.password.trim() &&
-            state.username.trim()
+            state.email.trim() === '' ||
+            state.password.trim() === '' ||
+            state.username.trim() === ''
         ) {
             enqueueSnackbar('Please fill all details', {
                 variant: 'error',
