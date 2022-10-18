@@ -6,6 +6,8 @@ Live website URL : [https://nutricheck-frontend-partheev-dev.apps.sandbox.x8i5.p
 
 > Use mobile device to access the website for better experience.
 
+> :warning: **Please contact us incase live url is not working (deployed services might be down or inactive)**
+
 ## Docker images:
 
 Backend: https://hub.docker.com/r/partheev8/nutri-backend/tags
@@ -29,6 +31,10 @@ Poornesh: [https://www.credly.com/users/poornesh-chenna](https://www.credly.com/
 Kiran: [https://www.credly.com/users/yuva-sai-kiran](https://www.credly.com/users/yuva-sai-kiran)
 
 Parshuram: [https://www.credly.com/users/parashuram-yerranagu](https://www.credly.com/users/parashuram-yerranagu)
+
+## Redhat Openshift cluster
+
+![screenshot](https://github.com/partheev/nutrition-assistant-webapp/blob/main/project%20report/Redhat-Cluster.png?raw=true)
 
 ## Project Folder structure
 
