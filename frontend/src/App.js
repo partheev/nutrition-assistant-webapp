@@ -6,13 +6,11 @@ import Blogs from './pages/Blogs/Blogs';
 import Blog01 from './pages/Blogs/Blog01';
 import Reports from './pages/Reports';
 import Nutrients from './pages/FoodScan/Nutrients';
-import { useEffect, useState } from 'react';
 import Dashboard from './pages/Dashboard';
 import BottomNavBar from './Components/BottomNavBar';
 import FoodScan from './pages/FoodScan';
 import UserInitialForm from './pages/UserInitialForm';
 import { useSnackbar } from 'notistack';
-import { API } from './services/apis';
 import Profile from './pages/profile/Profile';
 import Blog02 from './pages/Blogs/Blog02';
 

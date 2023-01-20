@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "/static/css/main.baff068b.css",
+    "main.js": "/static/js/main.5b2af557.js",
+    "static/media/week-plan.jpg": "/static/media/week-plan.fa68dc2d229d46eeb69f.jpg",
+    "static/media/blog4.jpg": "/static/media/blog4.3ba6aeb9be132a9dc395.jpg",
+    "static/media/blog3.jpg": "/static/media/blog3.60ed1f84b9efade2cdf7.jpg",
+    "static/media/blog1.jpg": "/static/media/blog1.a895d2c16f686ac3f508.jpg",
+    "static/media/sweetpotato.png": "/static/media/sweetpotato.850e597ea8a30797176c.png",
+    "static/media/eggs.png": "/static/media/eggs.0149921b46aafec6906b.png",
+    "static/media/blog6.jpg": "/static/media/blog6.25364df1bcf93014d37e.jpg",
+    "static/media/bananas.png": "/static/media/bananas.18ec754b50e10e7a921e.png",
+    "static/media/healthtips.jpg": "/static/media/healthtips.eb525aee3d975eb62c4d.jpg",
+    "static/media/profile.jpg": "/static/media/profile.34b6b19b504075331ca9.jpg",
+    "index.html": "/index.html"
+  },
+  "entrypoints": [
+    "static/css/main.baff068b.css",
+    "static/js/main.5b2af557.js"
+  ]
+}
