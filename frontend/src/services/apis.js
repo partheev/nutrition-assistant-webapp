@@ -70,9 +70,15 @@ const lastWeekCalorieDetails = async () => {
 
 const consumptionOn = async (date) => {
     return (
-        await Axios.post('/food/consumption-on', {
-            consumed_on: date,
-        })
+        await Axios.post(
+            '/food/consumption-on',
+            {
+                consumed_on: date,
+            },
+            {
+                timeout: 5000,
+            }
+        )
     ).data;
 };
 export const API = {

@@ -43,7 +43,7 @@ const Signin = () => {
                 fetchTodaysConsumption();
                 fetchWeekData();
             } else {
-                navigate('/userInfoForm');
+                navigate('/userInitialForm');
             }
         } catch (err) {
             enqueueSnackbar(err.response.data.msg, {

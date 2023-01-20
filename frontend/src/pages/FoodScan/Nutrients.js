@@ -152,7 +152,8 @@ const Nutrients = ({
                                     >
                                         <h4>{nutrient.title}</h4>
                                         <span>
-                                            {nutrient.value} {nutrient.units}
+                                            {Number(nutrient.value).toFixed(2)}{' '}
+                                            {nutrient.units}
                                         </span>
                                     </div>
                                     {idx !== arr.length - 1 && <Divider />}

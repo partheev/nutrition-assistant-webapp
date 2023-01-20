@@ -1,10 +1,9 @@
 from flask import Blueprint, request
 from src.middleware.jwt import encode_auth_token
 from src.middleware.jwt import token_required
-from src.config.db import conn
+from src.config.db import User, session
 from src.config.firebase import verifyGoogleAccessToken
 from src.utils import calorieCalculator
-import ibm_db
 
 auth = Blueprint('auth', __name__, url_prefix='/api/auth')
 
@@ -12,12 +11,24 @@ auth = Blueprint('auth', __name__, url_prefix='/api/auth')
 @auth.get('/me')
 @token_required
 def me(current_user):
-    del current_user['LOGIN_PASSWORD']
-    maxCalories = calorieCalculator(
-        w=current_user['WEIGHT'], h=current_user['HEIGHT'], age=current_user['AGE'], gender=current_user['GENDER'], activity=current_user['ACTIVITY'])
+    maxCalories = 0
+    if current_user.is_login_process_complete:
 
+        maxCalories = calorieCalculator(
+            w=current_user.weight, h=current_user.height, age=current_user.age, gender=current_user.gender, activity=current_user.activity)
     return {
-        'userInfo': current_user,
+        'userInfo': {
+            'ID': current_user.id,
+            'USERNAME': current_user.username,
+            'ACTIVITY': current_user.activity,
+            'AGE': current_user.age,
+            'EMAIL': current_user.email,
+            'GENDER': current_user.gender,
+            'HEIGHT': current_user.height,
+            'IS_LOGIN_PROCESS_COMPLETE': current_user.is_login_process_complete,
+            'WEIGHT': current_user.weight,
+
+        },
         'maxCalories': maxCalories
     }
 
@@ -34,50 +45,62 @@ def login():
                 'msg': "Please provide all keys. KEYS=['email','password']"
             }, 400
 
-        sql = "SELECT * FROM users WHERE email = ?"
+        user: User = session.query(User).filter(User.email == email).first()
 
-        stmt = ibm_db.prepare(conn, sql)
-        ibm_db.bind_param(stmt, 1, email)
-        ibm_db.execute(stmt)
-
-        user = ibm_db.fetch_assoc(stmt)
-
-        if user is False:
+        if user is None:
             return {
                 'msg': 'Email not registered. Please signup.'
             }, 404
 
-        if user.get('LOGIN_PASSWORD', None) is None:
+        if user.login_password is None:
             return {
                 'msg': 'Please sign in using google account'
             }, 400
-        if password != user['LOGIN_PASSWORD']:
+        if password != user.login_password:
             return {
                 'msg': 'Invalid credentials'
             }, 400
 
-        token = encode_auth_token(user_id=user.get('ID'))
+        token = encode_auth_token(user_id=user.id)
 
         if token is None:
             return {
                 "msg": "Something went wrong. Try again"
             }, 500
 
-        del user['LOGIN_PASSWORD']
-
-        if user.get('IS_LOGIN_PROCESS_COMPLETE'):
+        if user.is_login_process_complete:
 
             maxCalories = calorieCalculator(
-                w=user['WEIGHT'], h=user['HEIGHT'], age=user['AGE'], gender=user['GENDER'], activity=user['ACTIVITY'])
+                w=user.weight, h=user.height, age=user.age, gender=user.gender, activity=user.activity)
 
             return {
-                'user': user,
+                'user': {
+                    'USERNAME': user.username,
+                    'ID': user.id,
+                    'EMAIL': user.email,
+                    'IS_LOGIN_PROCESS_COMPLETE': user.is_login_process_complete,
+                    'WEIGHT': user.weight,
+                    'HEIGHT': user.height,
+                    'AGE': user.age,
+                    'GENDER': user.gender,
+                    'ACTIVITY': user.activity
+                },
                 'token': token,
                 'maxCalories': maxCalories
             }
         else:
             return {
-                'user': user,
+                'user': {
+                    'USERNAME': user.username,
+                    'ID': user.id,
+                    'EMAIL': user.email,
+                    'IS_LOGIN_PROCESS_COMPLETE': user.is_login_process_complete,
+                    'WEIGHT': user.weight,
+                    'HEIGHT': user.height,
+                    'AGE': user.age,
+                    'GENDER': user.gender,
+                    'ACTIVITY': user.activity
+                },
                 'token': token,
             }
 
@@ -95,24 +118,18 @@ def signup():
         email = data['email']
         password = data['password']
 
-        finduser_stmt = ibm_db.prepare(
-            conn, 'SELECT * FROM USERS WHERE EMAIL = ?')
-        ibm_db.bind_param(finduser_stmt, 1, email)
-        ibm_db.execute(finduser_stmt)
-        if ibm_db.fetch_assoc(finduser_stmt) is not False:
+        user: User = session.query(User).filter(User.email == email).first()
+
+        if user:
             return{
                 'msg': 'User already exist'
             }, 400
 
-        sql = "SELECT * FROM NEW TABLE(INSERT INTO users (username,email,login_password,is_login_process_complete) VALUES ( ?, ? ,?,false))"
-        stmt = ibm_db.prepare(conn, sql)
-        ibm_db.bind_param(stmt, 1, username)
-        ibm_db.bind_param(stmt, 2, email)
-        ibm_db.bind_param(stmt, 3, password)
-        ibm_db.execute(stmt)
+        newuser = User(username, email, password)
+        session.add(newuser)
+        session.commit()
 
-        user = ibm_db.fetch_assoc(stmt)
-        token = encode_auth_token(user_id=user.get('ID'))
+        token = encode_auth_token(user_id=newuser.id)
         if token is None:
             return {
                 "msg": "Something went wrong. Try again"
@@ -142,43 +159,51 @@ def googleOauth():
         name = info.get('name')
         email = info.get('email')
 
-        stmt = ibm_db.prepare(conn, 'SELECT * FROM USERS WHERE EMAIL=?')
-        ibm_db.bind_param(stmt, 1, email)
-        ibm_db.execute(stmt)
-        user = ibm_db.fetch_assoc(stmt)
+        user: User = session.query(User).filter(User.email == email).first()
 
-        if not user:
-            sql = "SELECT * FROM NEW TABLE(INSERT INTO users (username,email,is_login_process_complete) VALUES ( ?, ? ,false))"
-            newuser_stmt = ibm_db.prepare(conn, sql)
-            ibm_db.bind_param(newuser_stmt, 1, name)
-            ibm_db.bind_param(newuser_stmt, 2, email)
-            ibm_db.execute(newuser_stmt)
-            newuser = ibm_db.fetch_assoc(newuser_stmt)
-            del newuser['LOGIN_PASSWORD']
-            token = encode_auth_token(user_id=newuser.get('ID'))
+        if user is None:
+            newuser = User(name, email)
+            session.add(newuser)
+            session.commit()
+
+            token = encode_auth_token(user_id=newuser.id)
             if token is None:
                 return {
                     "msg": "Something went wrong. Try again"
                 }, 500
 
             return {"token": token,
-                    "user": newuser}
+                    "user": {
+                        'USERNAME': newuser.username,
+                        'ID': newuser.id,
+                        'EMAIL': newuser.email,
+                        'IS_LOGIN_PROCESS_COMPLETE': newuser.is_login_process_complete,
+                    }}
 
         else:
-            del user['LOGIN_PASSWORD']
-            token = encode_auth_token(user_id=user.get('ID'))
+            token = encode_auth_token(user_id=user.id)
             if token is None:
                 return {
                     "msg": "Something went wrong. Try again"
                 }, 500
 
-            if user.get('IS_LOGIN_PROCESS_COMPLETE'):
+            if user.is_login_process_complete:
 
                 maxCalories = calorieCalculator(
-                    w=user['WEIGHT'], h=user['HEIGHT'], age=user['AGE'], gender=user['GENDER'], activity=user['ACTIVITY'])
+                    w=user.weight, h=user.height, age=user.age, gender=user.gender, activity=user.activity)
 
                 return {
-                    'user': user,
+                    'user': {
+                        'USERNAME': user.username,
+                        'ID': user.id,
+                        'EMAIL': user.email,
+                        'IS_LOGIN_PROCESS_COMPLETE': user.is_login_process_complete,
+                        'WEIGHT': user.weight,
+                        'HEIGHT': user.height,
+                        'AGE': user.age,
+                        'GENDER': user.gender,
+                        'ACTIVITY': user.activity
+                    },
                     'token': token,
                     'maxCalories': maxCalories
                 }
@@ -210,32 +235,33 @@ def userInfo(current_user):
                 'msg': 'Invalid data. Required data [height,weight,age,gender,activity]'
             }, 400
 
-        stmt = ibm_db.prepare(
-            conn, 'UPDATE users SET (height,weight,age,IS_LOGIN_PROCESS_COMPLETE,GENDER,ACTIVITY) = (?,?,?,?,?,?) WHERE id = ?')
+        user: User = session.query(User).filter(
+            User.id == current_user.id).first()
+        user.height = height
+        user.activity = activity
+        user.age = age
+        user.weight = weight
+        user.gender = gender
+        user.is_login_process_complete = True
 
-        ibm_db.bind_param(stmt, 1, height)
-        ibm_db.bind_param(stmt, 2, weight)
-        ibm_db.bind_param(stmt, 3, age)
-        ibm_db.bind_param(stmt, 4, True)
-        ibm_db.bind_param(stmt, 5, gender)
-        ibm_db.bind_param(stmt, 6, activity)
-        ibm_db.bind_param(stmt, 7, current_user.get('ID'))
-
-        ibm_db.execute(stmt)
-
-        user_stmt = ibm_db.prepare(conn, 'SELECT * FROM USERS WHERE ID = ?')
-        ibm_db.bind_param(user_stmt, 1, current_user.get('ID'))
-        ibm_db.execute(user_stmt)
-
-        userInfo = ibm_db.fetch_assoc(user_stmt)
-        del userInfo['LOGIN_PASSWORD']
+        session.commit()
 
         maxCalories = calorieCalculator(
             w=weight, h=height, age=age, gender=gender, activity=activity)
 
         return{
             'msg': 'User info updated',
-            'userInfo': userInfo,
+            'userInfo': {
+                'USERNAME': user.username,
+                'ID': user.id,
+                'EMAIL': user.email,
+                'IS_LOGIN_PROCESS_COMPLETE': user.is_login_process_complete,
+                'WEIGHT': user.weight,
+                'HEIGHT': user.height,
+                'AGE': user.age,
+                'GENDER': user.gender,
+                'ACTIVITY': user.activity
+            },
             'maxCalories': maxCalories
         }
 

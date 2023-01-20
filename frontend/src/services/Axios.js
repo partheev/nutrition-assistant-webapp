@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const instance = axios.create({
     baseURL:
-        'https://nutricheck-backend-partheev-dev.apps.sandbox.x8i5.p1.openshiftapps.com/api',
+        'https://nutri-backend-keshava369-dev.apps.sandbox-m2.ll9k.p1.openshiftapps.com/api',
     // 'http://localhost:5000/api',
 });
 instance.interceptors.request.use((config) => {

@@ -14,7 +14,7 @@ const WEEKS = [
     'Monday',
     'Tuesday',
     'Wednesday',
-    'Thrusday',
+    'Thursday',
     'Friday',
     'Saturday',
 ];

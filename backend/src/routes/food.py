@@ -1,13 +1,15 @@
 import datetime
+from datetime import date, timedelta
+from typing import List
 from flask import Blueprint, request, current_app
 import uuid
 import os
-import ibm_db
 import requests
+from sqlalchemy import func
 from src.utils import getFileStorageURL
-from src.config.db import conn
+from src.config.db import ConsumedFood, session
 from src.middleware.jwt import token_required
-from src.constants import AI_SERVICE_ENDPOINT
+from src.constants import AI_SERVICE_ENDPOINT, DAY_OF_WEEK
 from src.config.firebase import upload_image_to_firebase
 food = Blueprint('food', __name__, url_prefix='/api/food')
 
@@ -74,21 +76,11 @@ def intakeFood(current_user):
             nutriMap[nutri.get('title')] = nutri.get('value')
 
         # create food document in db with nutrition details
-
-        sql = "SELECT ID FROM NEW TABLE (INSERT INTO CONSUMED_FOODS (user_id,name,image,calorie,carbohydrates,fat,proteins,calcium) values(?,?,?,?, ?,?,?,?))"
-
-        stmt = ibm_db.prepare(conn, sql)
-        ibm_db.bind_param(stmt, 1, current_user.get('ID'))
-        ibm_db.bind_param(stmt, 2, food_item)
-        ibm_db.bind_param(stmt, 3, image_url)
-        ibm_db.bind_param(stmt, 4, nutriMap.get('Calorie'))
-        ibm_db.bind_param(stmt, 5, nutriMap.get('Carbohydrates'))
-        ibm_db.bind_param(stmt, 6, nutriMap.get('Fat'))
-        ibm_db.bind_param(stmt, 7, nutriMap.get('Proteins'))
-        ibm_db.bind_param(stmt, 8, nutriMap.get('Calcium'))
-        ibm_db.execute(stmt)
-
-        consumedFoodId = ibm_db.fetch_assoc(stmt).get('ID')
+        consumedFood = ConsumedFood(user_id=current_user.id, name=food_item, calcium=nutriMap.get('Calcium'), calorie=nutriMap.get(
+            'Calorie'), carbohydrates=nutriMap.get('Carbohydrates'), proteins=nutriMap.get('Proteins'), fat=nutriMap.get('Fat'), image=image_url)
+        session.add(consumedFood)
+        session.commit()
+        consumedFoodId = consumedFood.id
 
         return{
             'consumed_food_id': consumedFoodId,
@@ -102,8 +94,8 @@ def intakeFood(current_user):
         }, 500
 
 
-@food.post('/intake')
-@token_required
+@ food.post('/intake')
+@ token_required
 def intake(current_user):
     try:
 
@@ -111,11 +103,10 @@ def intake(current_user):
 
         consumed_food_id = data.get('consumed_food_id')
 
-        stmt = ibm_db.prepare(
-            conn, 'UPDATE CONSUMED_FOODS SET IS_INTAKE = ? WHERE ID= ?')
-        ibm_db.bind_param(stmt, 1, True)
-        ibm_db.bind_param(stmt, 2, consumed_food_id)
-        ibm_db.execute(stmt)
+        session.query(ConsumedFood).filter(ConsumedFood.id == consumed_food_id).update({
+            ConsumedFood.is_intake: True
+        })
+        session.commit()
 
         return {
             'msg': 'Food intake successful'
@@ -126,15 +117,16 @@ def intake(current_user):
         }, 500
 
 
-@food.get('/todays-consumption')
-@token_required
+@ food.get('/todays-consumption')
+@ token_required
 def todaysConsumption(current_user):
-    sql = 'SELECT * FROM CONSUMED_FOODS WHERE IS_INTAKE = ? and USER_ID = ? AND current_date  = date(consumed_on)'
-    stmt = ibm_db.prepare(conn, sql)
-    ibm_db.bind_param(stmt, 1, True)
-    ibm_db.bind_param(stmt, 2, current_user.get('ID'))
-    ibm_db.execute(stmt)
-
+    foodItems: List[ConsumedFood] = session.query(
+        ConsumedFood
+    ).filter(
+        ConsumedFood.user_id == current_user.id,
+        ConsumedFood.is_intake == True,
+        func.DATE(ConsumedFood.consumed_on) == date.today()
+    ).all()
     foodList = []
     totalNutris = {
         'CALORIE': 0,
@@ -143,16 +135,28 @@ def todaysConsumption(current_user):
         'FAT': 0,
         'PROTEINS': 0
     }
-    while(True):
-        foodItem = ibm_db.fetch_assoc(stmt)
+
+    for foodItem in foodItems:
         if foodItem:
-            foodList.append(foodItem)
-            totalNutris['CALORIE'] += (foodItem.get('CALORIE') or 0)
-            totalNutris['CALCIUM'] += (foodItem.get('CALCIUM') or 0)
+            foodList.append({
+                'ID': foodItem.id,
+                'USER_ID': foodItem.user_id,
+                'NAME': foodItem.name,
+                'IMAGE': foodItem.image,
+                'CALORIE': foodItem.calorie,
+                'CARBOHYDRATES': foodItem.carbohydrates,
+                'FAT': foodItem.fat,
+                'PROTEINS': foodItem.proteins,
+                'CALCIUM': foodItem.calcium,
+                'IS_INTAKE': foodItem.is_intake,
+                'CONSUMED_ON': foodItem.consumed_on
+            })
+            totalNutris['CALORIE'] += (foodItem.calorie or 0)
+            totalNutris['CALCIUM'] += (foodItem.calcium or 0)
             totalNutris['CARBOHYDRATES'] += (
-                foodItem.get('CARBOHYDRATES') or 0)
-            totalNutris['FAT'] += (foodItem.get('FAT') or 0)
-            totalNutris['PROTEINS'] += (foodItem.get('PROTEINS') or 0)
+                foodItem.carbohydrates or 0)
+            totalNutris['FAT'] += (foodItem.fat or 0)
+            totalNutris['PROTEINS'] += (foodItem.proteins or 0)
         else:
             break
 
@@ -162,29 +166,37 @@ def todaysConsumption(current_user):
     }
 
 
-@food.get('/last-week-nutrition-details')
-@token_required
+@ food.get('/last-week-nutrition-details')
+@ token_required
 def lastWeek(current_user):
     sql = 'SELECT date(consumed_on) as consumed_on,dayname(date(consumed_on)) as day, sum(calorie) as calories  FROM CONSUMED_FOODS WHERE IS_INTAKE = ? and USER_ID = ? AND (consumed_on > current date - 7 days) group by date(consumed_on) limit 7'
-    stmt = ibm_db.prepare(conn, sql)
-    ibm_db.bind_param(stmt, 1, True)
-    ibm_db.bind_param(stmt, 2, current_user.get('ID'))
-    ibm_db.execute(stmt)
+    weeks = session.query(func.DATE(ConsumedFood.consumed_on).label('consumed_on'),
+                          func.extract(
+        'dow',func.DATE( ConsumedFood.consumed_on)).label('day'),
+        func.sum(ConsumedFood.calorie).label('calories')
+    ).filter(
+        ConsumedFood.is_intake == True,
+        ConsumedFood.user_id == current_user.id,
+        ConsumedFood.consumed_on > (date.today()-timedelta(days=7))
+    ).group_by(
+        func.DATE(ConsumedFood.consumed_on)
+    ).limit(7)
 
     weekData = []
-    while(True):
-        week = ibm_db.fetch_assoc(stmt)
-        if not week:
-            break
-        weekData.append(week)
+    for week in weeks:
+        weekData.append({
+            'CONSUMED_ON': week.consumed_on,
+            'DAY': DAY_OF_WEEK.get(int(week.day)),
+            'CALORIES': week.calories,
+        })
 
     return {
         'weekData': weekData
     }
 
 
-@food.post('/consumption-on')
-@token_required
+@ food.post('/consumption-on')
+@ token_required
 def consumptionOn(current_user):
     try:
 
@@ -195,21 +207,24 @@ def consumptionOn(current_user):
                 'msg': 'Invalid data. [consumed_on] field missing'
             }, 400
 
-        stmt = ibm_db.prepare(
-            conn, 'SELECT * FROM CONSUMED_FOODS WHERE date(consumed_on) = (?) and user_id = ? and IS_INTAKE = ?')
-        ibm_db.bind_param(stmt, 1, str(datetime.date.fromtimestamp(
-            int(consumed_on)/1000.0)))
-        ibm_db.bind_param(stmt, 2, current_user.get('ID'))
-        ibm_db.bind_param(stmt, 3, True)
-        ibm_db.execute(stmt)
+        foodsData: List[ConsumedFood] = session.query(ConsumedFood).filter(func.DATE(ConsumedFood.consumed_on) == datetime.date.fromtimestamp(
+            int(consumed_on)/1000.0), ConsumedFood.user_id == current_user.id, ConsumedFood.is_intake == True).all()
 
         foods = []
 
-        while True:
-            food = ibm_db.fetch_assoc(stmt)
-            if food is False:
-                break
-            foods.append(food)
+        for food in foodsData:
+            foods.append({
+                'ID': food.id,
+                'CALCIUM': food.calcium,
+                'CALORIE': food.calorie,
+                'CARBOHYDRATES': food.carbohydrates,
+                'FAT': food.fat,
+                'CONSUMED_ON': food.consumed_on,
+                'IMAGE': food.image,
+                'IS_INTAKE': food.is_intake,
+                'PROTEINS': food.proteins,
+                'NAME': food.name,
+            })
 
         return {
             'food_items': foods
