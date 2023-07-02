@@ -1,10 +1,13 @@
 # NUTRICHECK
 
-A Nutrition Assistant to control diet, manage food habits and keep good health.
+A Nutrition Assistant to control diet, manage food habits, and keep good health.
 
-> Use mobile device to access the website for better experience.
+## Screenshots
+![0001](https://github.com/partheev/nutrition-assistant-webapp/assets/30794881/bc87d92b-abaa-41ef-9fc9-a6cc073a3b9b)
 
-> :warning: **Please contact us incase live url is not working (deployed services might be down or inactive)**
+![0002](https://github.com/partheev/nutrition-assistant-webapp/assets/30794881/57b40bb2-4886-4d0b-ba3a-79c3c0d8b6a9)
+
+> Use a mobile device to access the website for a better experience.
 
 ## Docker images:
 
@@ -14,25 +17,18 @@ Frontend: https://hub.docker.com/r/partheev8/nutri-frontend
 
 AI service backend: https://hub.docker.com/r/partheev8/nutri-ai/tags
 
-## Demonstration video link
-
-[https://drive.google.com/file/d/1xNQtir7lDM0P9NdaWEpyf6RaoBmJmXOR/view?usp=sharing](https://drive.google.com/file/d/1xNQtir7lDM0P9NdaWEpyf6RaoBmJmXOR/view?usp=sharing)
-
-### Course completion badges
-
-Credly links
-
-Partheev: [https://www.credly.com/users/partheev-budarapu](https://www.credly.com/users/partheev-budarapu)
-
-Poornesh: [https://www.credly.com/users/poornesh-chenna](https://www.credly.com/users/poornesh-chenna)
-
-Kiran: [https://www.credly.com/users/yuva-sai-kiran](https://www.credly.com/users/yuva-sai-kiran)
-
-Parshuram: [https://www.credly.com/users/parashuram-yerranagu](https://www.credly.com/users/parashuram-yerranagu)
 
 ## Redhat Openshift cluster
+![System Architecture](https://github.com/partheev/nutrition-assistant-webapp/assets/30794881/eaa38c29-10b4-47c1-9299-3022878686ea)
 
-![screenshot](https://github.com/partheev/nutrition-assistant-webapp/blob/main/project%20report/Redhat-Cluster.png?raw=true)
+## Block Diagram
+![Block Diagram](https://github.com/partheev/nutrition-assistant-webapp/assets/30794881/02a4eb58-1668-4f0e-9db8-468a878c2d6c)
+
+## Flowchart
+![Flowchart](https://github.com/partheev/nutrition-assistant-webapp/assets/30794881/f16667ae-215c-49ca-b224-d9587ba279cb)
+
+
+
 
 ## Project Folder structure
 
@@ -43,7 +39,7 @@ Parshuram: [https://www.credly.com/users/parashuram-yerranagu](https://www.credl
 │
 ├── ai-food-detection (Flask application with integration of 3rd party services)
 |
-├── badges (Team members badge images)
+├── badges (Team member's badge images)
 │
 ├── project report
 │   ├── project report.pdf (Project report document)
@@ -52,12 +48,11 @@ Parshuram: [https://www.credly.com/users/parashuram-yerranagu](https://www.credl
 │   └── Block Diagram.png
 │
 ├─ screenshots
-│   └── screenshots-pdf.pdf (Screenshots of Nutricheck in mobile view)
-│
-└─ Video Demonstration.avi (Solution explaination video)
+    └── screenshots-pdf.pdf (Screenshots of Nutricheck in mobile view)
+
 ```
 
-## How to run project in your system
+## How to run the project in your system
 
 Clone the repo
 
@@ -67,7 +62,7 @@ Clone the repo
 -   `npm install`
 -   `npm start`
 
-> Note : Node runtime must be installed to run above commands and change backend endpoint in the Axios.js file.
+> Note: Node runtime must be installed to run the above commands and change the backend endpoint in the Axios.js file.
 
 ### Run backend
 
@@ -75,7 +70,7 @@ Clone the repo
 -   `pip install -r requirements.txt`
 -   `flask run`
 
-> Note : Python must be installed in the system (v3.9+ preferred). Configure env variables
+> Note: Python must be installed in the system (v3.9+ preferred). Configure env variables
 
 ### Run AI Backend Service
 
@@ -83,6 +78,6 @@ Clone the repo
 -   `pip install -r requirements.txt`
 -   `flask run`
 
-> Note : Python must be installed in the system (v3.9+ preferred). Configure env variables
+> Note: Python must be installed in the system (v3.9+ preferred). Configure env variables
 
-You can visit the application at http://localhost:3000 in the development mode.
+You can visit the application at http://localhost:3000 in development mode.
