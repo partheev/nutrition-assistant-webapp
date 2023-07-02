@@ -2,8 +2,6 @@
 
 A Nutrition Assistant to control diet, manage food habits and keep good health.
 
-Live website URL : [https://nutricheck-frontend-partheev-dev.apps.sandbox.x8i5.p1.openshiftapps.com/](https://nutricheck-frontend-partheev-dev.apps.sandbox.x8i5.p1.openshiftapps.com/)
-
 > Use mobile device to access the website for better experience.
 
 > :warning: **Please contact us incase live url is not working (deployed services might be down or inactive)**
